@@ -204,7 +204,7 @@ COGDefuzzSetObj* COGDefuzzVarObj::get_set_defuzz_obj(int set_idx) const
 
 int COGDefuzzVarObj::get_defuzz_type() const
 { 
-	return DefuzzVarObj::DEFUZZ_TYPE::COG; 
+	return DefuzzVarObj::DEFUZZ_COG; 
 };
 
  

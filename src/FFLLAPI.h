@@ -28,23 +28,30 @@
 #	define ffll_get_msg_text		ffll_get_msg_textA
 #endif // unicode
 
+// define how we export the functions
+#ifdef _WIN32
+#	define	WIN_FFLL_API	__stdcall
+#else
+#	define	WIN_FFLL_API
+#endif
+
 extern "C"
 {
 // API for creating a FFLL model
 
-int __stdcall ffll_new_model() ;
-int __stdcall ffll_close_model(int model_idx) ;
-int __stdcall ffll_new_child(int model_idx) ;
-int __stdcall ffll_load_fcl_file(int model_idx, const char* file); 
+int WIN_FFLL_API ffll_new_model() ;
+int WIN_FFLL_API ffll_close_model(int model_idx) ;
+int WIN_FFLL_API ffll_new_child(int model_idx) ;
+int WIN_FFLL_API ffll_load_fcl_file(int model_idx, const char* file); 
 
  
-const wchar_t* __stdcall ffll_get_msg_textW(int model_idx);
-const char* __stdcall ffll_get_msg_textA(int model_idx);
+const wchar_t* WIN_FFLL_API ffll_get_msg_textW(int model_idx);
+const char* WIN_FFLL_API ffll_get_msg_textA(int model_idx);
 
 // thread specific functions...
 
-int __stdcall ffll_set_value(int model_idx, int child_idx, int var_idx, double value);
-double __stdcall ffll_get_output_value(int model_idx, int child_idx);
+int WIN_FFLL_API ffll_set_value(int model_idx, int child_idx, int var_idx, double value);
+double WIN_FFLL_API ffll_get_output_value(int model_idx, int child_idx);
 
 } // end extern "C" for FFLL api
   

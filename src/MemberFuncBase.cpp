@@ -54,7 +54,7 @@ MemberFuncBase::MemberFuncBase(FuzzySetBase* _parent) : FFLLBase(_parent)
   
 	values = NULL; 
 
-	ramp = MemberFuncBase::RAMP::NONE; // not a ramp (at this point)
+	ramp = MemberFuncBase::RAMP_NONE; // not a ramp (at this point)
 
 } // end MemberFuncBase::MemberFuncBase()
 
@@ -165,13 +165,13 @@ void  MemberFuncBase::set_ramp(int hi_lo_ind, int left_right_ind)
 {
 	// set the type of ramp for this term
  	if (hi_lo_ind == 0)
-		ramp = MemberFuncBase::RAMP::NONE;
+		ramp = MemberFuncBase::RAMP_NONE;
 	else
 		{
 		if (left_right_ind)
-			ramp = MemberFuncBase::RAMP::LEFT;
+			ramp = MemberFuncBase::RAMP_LEFT;
 		else
-			ramp = MemberFuncBase::RAMP::RIGHT;
+			ramp = MemberFuncBase::RAMP_RIGHT;
 		}
 
 	calc(); // re-calc 'y' values

@@ -222,24 +222,24 @@ int FuzzySetBase::new_member_func(int type)
  
 	switch (type)
 			{
-			case MemberFuncBase::TYPE::TRIANGLE:
+			case MemberFuncBase::TRIANGLE:
 
  				member_func = new MemberFuncTri(this);
 
 				break;
 
-			case MemberFuncBase::TYPE::TRAPEZOID:
+			case MemberFuncBase::TRAPEZOID:
 
 				member_func = new MemberFuncTrap(this);
 				break;
 
-			case MemberFuncBase::TYPE::S_CURVE:
+			case MemberFuncBase::S_CURVE:
 
 				member_func = new MemberFuncSCurve(this);
 
 				break;
 
-			case MemberFuncBase::TYPE::SINGLETON:
+			case MemberFuncBase::SINGLETON:
  
 				member_func = new MemberFuncSingle(this);
  
@@ -507,7 +507,7 @@ FuzzyVariableBase* FuzzySetBase::get_parent() const
 
 const wchar_t* FuzzySetBase::get_id(void) const
 {
-	return((id == L"") ? NULL :  (id.data()));
+	return((id == L"") ? NULL :  (id.c_str()));
 }; 
 
 int FuzzySetBase::get_end_x(void) const

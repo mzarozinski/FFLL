@@ -16,6 +16,8 @@
  
 #include "FFLLBase.h"  
 
+
+
 class FuzzyVariableBase;
 class FuzzyOutVariable;
 class FuzzySetBase;
@@ -140,7 +142,7 @@ class  FuzzyModelBase : virtual public FFLLBase
 		// NOTE: we broke composition (in FuzzyVariableOut) and inference into 2 parts for flexability.  
 		// you will often see them combined and refered to as "inference methods"
 		// such as MIN-MAX.
-		enum INFERENCE_OPERATION { MIN, MAX };
+		enum INFERENCE_OPERATION { INFERENCE_OPERATION_MIN, INFERENCE_OPERATION_MAX };
  
  
 	protected:

@@ -15,6 +15,7 @@
 #include "MemberFuncBase.h"
 
 #include <fstream>
+#include <limits.h>
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -513,6 +514,12 @@ int FuzzyVariableBase::set_id(const char* _id, int set_idx /* = -1 */)
 //
 int FuzzyVariableBase::set_id(const wchar_t* _id, int set_idx /* = -1 */)
 {
+	if (_id == NULL || wcslen(_id) == 0)
+		{
+		id = L"";
+		return 0;
+		}
+
 	// if a set_idx is passed in, set the name for that set
 	if (set_idx >= 0)
 		{
@@ -524,11 +531,7 @@ int FuzzyVariableBase::set_id(const wchar_t* _id, int set_idx /* = -1 */)
 			set_msg_text(sets[set_idx]->get_msg_text());
  			return ret_val;  
 			}
-		}
 
- 	if (_id == NULL || wcslen(_id) == 0)
-		{
-		id = L"";
 		return 0;
 		}
 
@@ -598,7 +601,7 @@ int FuzzyVariableBase::add_set(const FuzzySetBase* _new_set)
  		 
 	std::wstring set_name = tmp_sets[num_of_sets]->get_id();
 
- 	while (!(is_set_id_unique(set_name.data(),  get_num_of_sets())))
+ 	while (!(is_set_id_unique(set_name.c_str(),  get_num_of_sets())))
 		{
 		// save the name
 		tmp_name = set_name;
@@ -612,7 +615,7 @@ int FuzzyVariableBase::add_set(const FuzzySetBase* _new_set)
 
 		} // end wile set is NOT unique
    
-	tmp_sets[num_of_sets]->set_id(set_name.data());
+	tmp_sets[num_of_sets]->set_id(set_name.c_str());
 
 	 // set the set index...
 	tmp_sets[num_of_sets]->set_index(num_of_sets);
@@ -889,12 +892,12 @@ int FuzzyVariableBase::load_sets_from_fcl_file(std::ifstream& file_contents)
  				return -1; 
 				}
 
-			} while (strcmp(stoken.data(), "FUZZIFY") != 0 );
+			} while (strcmp(stoken.c_str(), "FUZZIFY") != 0 );
 		
 		// if we got here we have a FUZZIFY block... check if it's the right var...
 		file_contents >> var_name;
 
-	 	if (strcmp(var_name.data(), aid) == 0)
+	 	if (strcmp(var_name.c_str(), aid) == 0)
  			found = true;
  
 		}; // end while !found
@@ -954,6 +957,13 @@ int FuzzyVariableBase::load_sets_from_fcl_file(std::ifstream& file_contents)
 
 		token = strtok(NULL, seps);
  
+		if (token == NULL)
+			{
+			// ERROR - invalid format
+			set_msg_text(ERR_INVALID_FILE_FORMAT); // could be a bit more "robuts" in our error reporting!
+			return -1;
+			}
+
 		int num_of_points = 0;
 
 		// handle special case of singletons.  They'll be of the form "<value>;"
@@ -1002,6 +1012,14 @@ int FuzzyVariableBase::load_sets_from_fcl_file(std::ifstream& file_contents)
 				num_of_points++;
 
 				token = strtok(NULL, seps);
+
+				if (token == NULL)
+					{
+					// ERROR - invalid format
+					set_msg_text(ERR_INVALID_FILE_FORMAT); // could be a bit more "robuts" in our error reporting!
+					return -1;
+					}
+
 				} // end while still reading values
 
 			} // end if not singleton
@@ -1011,16 +1029,16 @@ int FuzzyVariableBase::load_sets_from_fcl_file(std::ifstream& file_contents)
 		switch(num_of_points)
 			{
  			case 1:
- 				type = MemberFuncBase::TYPE::SINGLETON;
+ 				type = MemberFuncBase::SINGLETON;
 				break;
 			case 3:
-				type = MemberFuncBase::TYPE::TRIANGLE;
+				type = MemberFuncBase::TRIANGLE;
 				break;
 			case 4:
-				type = MemberFuncBase::TYPE::TRAPEZOID;
+				type = MemberFuncBase::TRAPEZOID;
 				break;
 			case 7:
-				type = MemberFuncBase::TYPE::S_CURVE;
+				type = MemberFuncBase::S_CURVE;
 				break;
 			default:
 				return -1; // error
@@ -1348,7 +1366,7 @@ FuzzyModelBase* FuzzyVariableBase::get_parent(void) const
 const wchar_t* FuzzyVariableBase::get_id(int set_idx /* = -1 */) const
 {
 	if (set_idx == -1)
-		return((id == L"") ? NULL : id.data()); 
+		return((id == L"") ? NULL : id.c_str()); 
 	else
 		{
 		FuzzySetBase* set = get_set(set_idx);

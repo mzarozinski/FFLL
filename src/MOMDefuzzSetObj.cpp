@@ -194,6 +194,6 @@ void MOMDefuzzSetObj::set_mean_value( RealType val)
  
 int MOMDefuzzSetObj::get_defuzz_type() const 
 { 
-	return DefuzzVarObj::DEFUZZ_TYPE::MOM; 
+	return DefuzzVarObj::DEFUZZ_MOM; 
 };
 

@@ -74,10 +74,11 @@
 #	define FFLL_INLINE 
 #endif 
 
-
+#include <wchar.h>
 #include <string>
 #include <assert.h>
 #include <float.h> // needed for FLT_MIN
+#include <fstream>
 
 // THIS version must be used by any caller outside this DLL otherwize we get
 // mem deallocation errors (in debug mode)
@@ -94,25 +95,33 @@ const int OUTPUT_IDX = -1; // constant for output variable
 // We're using unsigned char for the rules array cuz it's the smallest we can (easily) implement right now
 // we could shrink the memory footprint in 1/2 if we used bytes to store the info.  This would limit
 // us to 16 output sets... probably a reasonable amount but may be to limited.
+//typedef int RuleArrayType;
 typedef unsigned char  RuleArrayType;
 
 // using float for the variable's left/right values can cause a loss of precision so we'll typedef
 // a datatype...
 typedef double RealType;
  
+// ??? changing cuz of change from unsiggned short to int.
+
 const RuleArrayType NO_RULE = 255;	// 255 is the MAX that an unsigned char can hold - so this means we're
+//									// limited to 255 set in the output variable... a limitation I believe
+									// we can live with
+//const RuleArrayType NO_RULE = INT_MAX;	// 255 is the MAX that an unsigned char can hold - so this means we're
 									// limited to 255 set in the output variable... a limitation I believe
 									// we can live with
 
 // Typedef for the number of elements in the values[] array
-typedef unsigned short ValuesArrCountType;
+typedef int ValuesArrCountType;
+///typedef unsigned short ValuesArrCountType;
 
 // The DOM (Degree of Membership) is a value between 0 and MAX_DOM.  we could
 // have used a float and represened (as most FL systems do) the value from 0 to 1
 // but that would just be a waste of memory.  Using an unsigned char gives us
 // up to 256 values in only 8 bits.  Not too bad!  A Float would cost us (at least)
 // 4 bytes!
-typedef unsigned char DOMType;
+//typedef unsigned char DOMType;
+typedef int DOMType;
  	
 // create classes for the 'x' and 'y' node points,
 // this allows us to overload the '=' operator and EASILY

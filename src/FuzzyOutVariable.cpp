@@ -53,10 +53,10 @@ FuzzyOutVariable::FuzzyOutVariable(FuzzyModelBase* _parent) : FuzzyVariableBase(
 	defuzz_obj = NULL;
 
 	// default to MAX composition
-	composition_method =  COMPOSITION_OPERATION::MAX;
+	composition_method =  COMPOSITION_OPERATION_MAX;
 
 	// default to Center of Gravity defuzzification
-	set_defuzz_method( DefuzzVarObj::DEFUZZ_TYPE::COG);
+	set_defuzz_method( DefuzzVarObj::DEFUZZ_COG);
  
 }; // end FuzzyOutVariable::FuzzyOutVariable()
 
@@ -131,12 +131,12 @@ int FuzzyOutVariable::set_defuzz_method(int type)
  
 	switch(type)
 		{
-		case DefuzzVarObj::DEFUZZ_TYPE::COG:
+		case DefuzzVarObj::DEFUZZ_COG:
 			
 			defuzz_obj = new COGDefuzzVarObj(this);
 			break;
 
-		case DefuzzVarObj::DEFUZZ_TYPE::MOM:
+		case DefuzzVarObj::DEFUZZ_MOM:
 
 			defuzz_obj = new MOMDefuzzVarObj(this);
 			break;
@@ -203,8 +203,8 @@ int FuzzyOutVariable::set_composition_method(int method)
 
 	switch (method)
 		{
-		case COMPOSITION_OPERATION::MIN:
-		case COMPOSITION_OPERATION::MAX:
+		case COMPOSITION_OPERATION_MIN:
+		case COMPOSITION_OPERATION_MAX:
 			composition_method = method;
 			break;
 

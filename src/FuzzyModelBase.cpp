@@ -16,7 +16,7 @@
 #include "RuleArray.h"
 #include "DefuzzVarObj.h"
 
-#include <fstream>
+//#include <fstream> // ??? moved to .h
 #include <time.h>
 #include <math.h>
 
@@ -101,7 +101,7 @@ FuzzyModelBase::FuzzyModelBase() : FFLLBase(NULL)
 	model_name = ""; // clear out file name
  
 	// default to MIN inference
- 	inference_method = INFERENCE_OPERATION::MIN;
+ 	inference_method = INFERENCE_OPERATION_MIN;
  
 } // end FuzzyModelBase::FuzzyModelBase()
 
@@ -540,8 +540,7 @@ int FuzzyModelBase::add_set(int _var_idx,  const FuzzySetBase* _set)
 {
  	RuleArrayType*		new_mem = NULL;		// pointer to the new memory
 	int					new_mem_size;		// size of the new memory we're allocating
-	int					output_index = 0;	// index of the output variable
- 
+  
 	FuzzyVariableBase* var = get_var(_var_idx); 
 
 	// _set is NOT modified in add_set, so we can NOT rely on it's index value or
@@ -597,9 +596,6 @@ int FuzzyModelBase::add_set(int _var_idx,  const FuzzySetBase* _set)
  
 			// copy the rule from the OLD array to the NEW array
  				
-			DOMType a = rules->get_rule(rule_index);
-		//	if (a != NO_RULE)
-			//	int x = 23;
 			new_mem[new_mem_idx] = rules->get_rule(rule_index);
 
 			// increment the index into the OLD rules...
@@ -649,8 +645,7 @@ int FuzzyModelBase::delete_set(int _var_idx, int _set_idx)
 {
  	RuleArrayType*	new_mem = NULL;		// pointer to the new memory
 	int					new_mem_size;		// size of the new memory we're allocating
-	int					output_index = 0;	// index of the output variable
- 	int ret_val;
+  	int ret_val;
 
 	FuzzyVariableBase* var = get_var(_var_idx);  
 
@@ -856,7 +851,7 @@ const char* FuzzyModelBase::get_msg_textA()
 
 	delete[] aid;
 
- 	return ascii_err_msg.data();
+ 	return ascii_err_msg.c_str();
 	
 } // end get_msg_textA()
 
@@ -1159,9 +1154,9 @@ void FuzzyModelBase::calc_active_output_level(int var_num, DOMType activation_le
 				activation_level = set_dom;
 
 			// set the activation level to the current set's level dependent on the inference method
- 			if ((inference_method == INFERENCE_OPERATION::MIN) && (set_dom < activation_level) )
+ 			if ((inference_method == INFERENCE_OPERATION_MIN) && (set_dom < activation_level) )
 				activation_level = set_dom;
-			else if ((inference_method == INFERENCE_OPERATION::MAX) && (set_dom > activation_level))
+			else if ((inference_method == INFERENCE_OPERATION_MAX) && (set_dom > activation_level))
 				activation_level = set_dom;
 
 
@@ -1307,8 +1302,10 @@ int FuzzyModelBase::save_to_fcl_file(const char* file_name)
 // Date:	9/01
 // 
 // Modification History
-// Author	Date		Modification
-// ------	----		------------
+// Author		Date		Modification
+// ------		----		------------
+// Michael Z	05/02		Updating so writing out rules adhears to the FCL standard
+//							more closely
 //
 // 
  
@@ -1325,9 +1322,9 @@ void FuzzyModelBase::save_rules_to_fcl_file(std::ofstream& file_contents) const
 
  	file_contents << "\t";
 
-	if (inference == FuzzyModelBase::INFERENCE_OPERATION::MIN)  
+	if (inference == FuzzyModelBase::INFERENCE_OPERATION_MIN)  
 		file_contents << "AND:MIN";
-	else if (inference == FuzzyModelBase::INFERENCE_OPERATION::MAX) 
+	else if (inference == FuzzyModelBase::INFERENCE_OPERATION_MAX) 
 		file_contents << "OR:MAX";
 
 	file_contents << ";\n";
@@ -1338,9 +1335,9 @@ void FuzzyModelBase::save_rules_to_fcl_file(std::ofstream& file_contents) const
 	
 	file_contents << "\tACCU:";
 
-  	if (composition == FuzzyOutVariable::COMPOSITION_OPERATION::MIN)  
+  	if (composition == FuzzyOutVariable::COMPOSITION_OPERATION_MIN)  
 		file_contents << "BSUM";
-	else if (composition == FuzzyOutVariable::COMPOSITION_OPERATION::MAX) 
+	else if (composition == FuzzyOutVariable::COMPOSITION_OPERATION_MAX) 
 		file_contents << "MAX";
 
 	file_contents << ";\n";
@@ -1352,17 +1349,37 @@ void FuzzyModelBase::save_rules_to_fcl_file(std::ofstream& file_contents) const
 	// than use an STL container cuz we know the sizes before we start
 
 	std::string** var_sets;
+	std::string* var_name; // names of the variables (saved so we only have to get them
+							// and convert them once)
 
 	var_sets = new std::string*[input_var_count + 1];	// add one for output var
+	var_name = new std::string[input_var_count + 1];	// add one for output var
 
 	// create mem for each var...
 	int num_of_sets;
 	FuzzyVariableBase* var;
 
 	// loop through input vars, we'll save each set's ID into the var_sets array
+	// 05/02 - modifying so we write out what the FCL standard says we should:
+	//		subcondition ::= (‘NOT’ ‘(‘ variable_name ‘IS’ [‘NOT'] ) term_name ‘)’) | ( variable_name ‘IS’ [‘NOT’] term_name ) 
+	// NOTE: right now (5/02) we still don't support the 'NOT' option
+	// as opposed to the way we were doing it which was just:
+	//		subcondition ::= term_name
+	// which assumes the term_name part of each rule is specified in the order 
+	// that the variables are declared so it "knows" which variable_name the 
+	// term_name belongs to.
+
 	for (i = 0; i < input_var_count; i++)
 		{
 		var = get_var(i);
+
+		// get the variable's names
+		char* var_name_aid = convert_to_ascii(var->get_id(), '_');
+
+		var_name[i] = var_name_aid;
+
+		delete[] var_name_aid;
+
 		num_of_sets = var->get_num_of_sets();
 
 		var_sets[i] = new std::string[num_of_sets];
@@ -1386,7 +1403,16 @@ void FuzzyModelBase::save_rules_to_fcl_file(std::ofstream& file_contents) const
 	var = get_var(OUTPUT_IDX);
 	num_of_sets = var->get_num_of_sets();
 
+	// save output var's name
+
 	// NOTE: we use the 'i' counter from above
+	char* var_name_aid = convert_to_ascii(var->get_id(), '_');
+
+	var_name[i] = var_name_aid;
+
+	delete[] var_name_aid;
+
+	// now get each set's name...
 	var_sets[i] = new std::string[num_of_sets];
 
 	for (int j = 0; j < num_of_sets; j++)
@@ -1429,16 +1455,27 @@ void FuzzyModelBase::save_rules_to_fcl_file(std::ofstream& file_contents) const
 			file_contents << "RULE " << tmp << ": IF ";
  
 			// print out the IDs of the sets involved in this rule
-			for (int j = 0; j < input_var_count; j++)
+			int j;
+
+			for (j = 0; j < input_var_count; j++)
 				{
-	 			file_contents << var_sets[j][set_idx_array[j]];
+				// write out the subconditions in the form:
+				// ( variable_name ‘IS’ term_name )
+
+				var = get_var(j);
+
+	 			file_contents << "(" << var_name[j]  << " IS ";
+				file_contents << var_sets[j][set_idx_array[j]] << ")";
 
 				if (j < input_var_count - 1)
 					file_contents << " AND ";
 				} // end loop through vars
 
-	 		file_contents << " THEN " << var_sets[j][rule];
-
+	 		file_contents << " THEN ";
+			
+ 			file_contents << "(" << var_name[j]  << " IS ";
+			file_contents << var_sets[j][rule] << ")";
+ 
 			} // define rule
 
 		file_contents << ";\n";
@@ -1456,6 +1493,8 @@ void FuzzyModelBase::save_rules_to_fcl_file(std::ofstream& file_contents) const
 		}
 
 	delete[] var_sets;
+
+	delete[] var_name;
 
 } // end FuzzyModelBase::save_rules_to_file()
 
@@ -1594,7 +1633,7 @@ int FuzzyModelBase::load_vars_from_fcl_file(std::ifstream& file_contents, bool o
 			set_msg_text(ERR_EOF_READING_VARS);
  			return -1; 
 			}
-		}while (strcmp(token.data(), start_token) != 0);
+		}while (strcmp(token.c_str(), start_token) != 0);
 
 
   	// parse names...
@@ -1747,10 +1786,14 @@ int FuzzyModelBase::load_vars_from_fcl_file(std::ifstream& file_contents, bool o
 // Date:	9/01
 // 
 // Modification History
-// Author	Date		Modification
-// ------	----		------------
-//
-//	
+//	Author		Date		Modification
+//	------		----		------------
+//	Michael Z	6/02		modifying so we read what the FCL standard says we should:
+//								subcondition ::= (‘NOT’ ‘(‘ variable_name ‘IS’ [‘NOT'] ) term_name ‘)’) | ( variable_name ‘IS’ [‘NOT’] term_name ) 
+//							NOTE: we still don't support the 'NOT' option
+//							as opposed to the way we were doing it which was just:
+//								subcondition ::= term_name
+//							both methods will be supported for backwards compatibility
 
 int FuzzyModelBase::load_rules_from_fcl_file(std::ifstream& file_contents)
 {
@@ -1830,7 +1873,7 @@ int FuzzyModelBase::load_rules_from_fcl_file(std::ifstream& file_contents)
 	do
 		{
 		file_contents >> tmp;
-		} while (strcmp(tmp.data(), "RULEBLOCK") != 0 );
+		} while (strcmp(tmp.c_str(), "RULEBLOCK") != 0 );
 
 	file_contents >> tmp; // "eat" the rule block name which isn't significant
 
@@ -1881,11 +1924,11 @@ int FuzzyModelBase::load_rules_from_fcl_file(std::ifstream& file_contents)
 
 	if (strncmp(accum, "BSUM", strlen("BSUM")) == 0)
 		{
-		set_composition_method(FuzzyOutVariable::COMPOSITION_OPERATION::MIN);
+		set_composition_method(FuzzyOutVariable::COMPOSITION_OPERATION_MIN);
 		}
 	else if (strncmp(accum, "MAX", strlen("MAX")) == 0)
 		{
-		set_composition_method(FuzzyOutVariable::COMPOSITION_OPERATION::MAX);
+		set_composition_method(FuzzyOutVariable::COMPOSITION_OPERATION_MAX);
 		}
 	else
 		{
@@ -1899,8 +1942,10 @@ int FuzzyModelBase::load_rules_from_fcl_file(std::ifstream& file_contents)
 	std::string* rule_components = new std::string[input_var_count + 1]; // +1 for output var
 
 	file_contents >> tmp;
+			
+	bool strict_parsing = false;
 
-	while (strcmp(tmp.data(), "END_RULEBLOCK") != 0)
+	while (strcmp(tmp.c_str(), "END_RULEBLOCK") != 0)
 		{
 		if (file_contents.eof())
 			{
@@ -1910,7 +1955,7 @@ int FuzzyModelBase::load_rules_from_fcl_file(std::ifstream& file_contents)
 
 		// check if comment
 
-		if (strncmp(tmp.data(), "(*", sizeof("(*")) == 0)
+		if (strncmp(tmp.c_str(), "(*", sizeof("(*")) == 0)
 			{
 			// found a comment
 			// skip the rest of the line. Note, as this is a brain-dead parser
@@ -1918,8 +1963,9 @@ int FuzzyModelBase::load_rules_from_fcl_file(std::ifstream& file_contents)
 			file_contents.getline(line, 500);
 			} // end if found a comment
 
-		if (strcmp(tmp.data(), "RULE") == 0)
+		if (strcmp(tmp.c_str(), "RULE") == 0)
 			{
+
 			int component_idx = 0;	// which component we're dealing with
 			// found a rule
 
@@ -1928,27 +1974,93 @@ int FuzzyModelBase::load_rules_from_fcl_file(std::ifstream& file_contents)
 			do
 				{
 				file_contents >> tmp;
-				} while (strcmp(tmp.data(), "IF") != 0);
+				} while (strcmp(tmp.c_str(), "IF") != 0);
 
- 			file_contents >> rule_components[component_idx++];  // next condition
+			// we need to determine if this FCL file has the FFLL "shorthand" of just the term name
+			// or if it adhears to the FCL standard...
+			// NOTE that whichever method is used, it is ASSUMED that the terms are in the order
+			// that the varaiable are declared (again, lazy parsing!)
+
+			// if next token is '(' we're gonna assume we have a FCL file that uses the stricter
+			// compliance with the FCL and NOT the FFLL shorthand of just naming the term name.
+
+			file_contents >> tmp;
+
+			if (tmp[0] == '(')
+				{
+				// use strict FCL parsing
+
+				strict_parsing = true;
+
+				}
+			else
+				{
+				// use FFLL shorthand...
+				strict_parsing = false;
+				rule_components[component_idx++] = tmp;  // next condition
+				file_contents >> tmp;  // next token (could be "AND" or "THEN"
+				} // end if FFLL rule shorthand notation
+
+ 	//		file_contents >> rule_components[component_idx++];  // next condition
 
 			// loop through the rest until we find THEN
 			// NOTE that all these comparisons are case SENSITIVE!
-			file_contents >> tmp;  // next token (could be "AND" or "THEN"
-			while (strcmp(tmp.data(), "THEN") != 0)
+		//	file_contents >> tmp;  // next token (could be "AND" or "THEN"
+			while (strcmp(tmp.c_str(), "THEN") != 0)
 				{
-				file_contents >> rule_components[component_idx++];  // next condition
-				file_contents >> tmp; // next token (could be "AND" or "THEN"
-				} ;
+				if (strict_parsing)
+					{
+					// look for the token after ' IS '
+					do
+						{
+						file_contents >> tmp;
+						} while (strcmp(tmp.c_str(), "IS") != 0);
+				
+					file_contents >> rule_components[component_idx];  // next condition
+
+					// remove any trailing ')' that may be there
+					int paren_pos = rule_components[component_idx].find(")");
+
+					if (paren_pos > 0)	// NOTE: we only check > 0 rather than >= cuz if it's = 0 we have nothing
+						(rule_components[component_idx])[paren_pos] = '\0';
+
+					component_idx++;
+
+					file_contents >> tmp; // next token (could be "AND" or "THEN"
+
+					}
+			 	else
+					{
+					file_contents >> rule_components[component_idx++];  // next condition
+					file_contents >> tmp; // next token (could be "AND" or "THEN"
+					}
+
+ 
+				} ; // end while != THEN
 
 			// found THEN so next token is the result
+			if (strict_parsing)
+				{
+				// look for the token after ' IS '
+				do
+					{
+					file_contents >> tmp;
+					} while (strcmp(tmp.c_str(), "IS") != 0);
 
+				} // end if strict parsing
+ 
 			file_contents >> rule_components[component_idx];
 			// make sure the ';' isn't included
 			int semi_pos = rule_components[component_idx].find(";");
 
 			if (semi_pos > 0)	// NOTE: we only check > 0 rather than >= cuz if it's = 0 we have nothing
 				(rule_components[component_idx])[semi_pos] = '\0';
+
+			// remove any trailing ')' that may be there
+			int paren_pos = rule_components[component_idx].find(")");
+
+			if (paren_pos > 0)	// NOTE: we only check > 0 rather than >= cuz if it's = 0 we have nothing
+				(rule_components[component_idx])[paren_pos] = '\0';
 
 			// calc the rule index...
 
@@ -1960,7 +2072,7 @@ int FuzzyModelBase::load_rules_from_fcl_file(std::ifstream& file_contents)
 				num_sets = get_num_of_sets(i);
 				for (j = 0; j < num_sets; j++)
 					{
-					if (strcmp((sets[i][j]).data(), rule_components[i].data()) == 0)
+					if (strcmp((sets[i][j]).c_str(), rule_components[i].c_str()) == 0)
 						{
 						rule_idx +=  get_rule_index(i, j);
 						break;
@@ -1973,7 +2085,7 @@ int FuzzyModelBase::load_rules_from_fcl_file(std::ifstream& file_contents)
 			num_sets = get_num_of_sets(OUTPUT_IDX);
 			for (j = 0; j < num_sets; j++)
 				{
-				if (strcmp((sets[i][j]).data(), rule_components[i].data()) == 0)
+				if (strcmp((sets[i][j]).c_str(), rule_components[i].c_str()) == 0)
 					{
 					out_set_idx = j;
 					break;
@@ -2042,11 +2154,11 @@ int FuzzyModelBase::load_defuzz_block_from_fcl_file(std::ifstream& file_contents
 		if (file_contents.eof())
 			{
 			// didn't find a defuzzify block... set defaults
- 			set_defuzz_method(DefuzzVarObj::DEFUZZ_TYPE::COG);
+ 			set_defuzz_method(DefuzzVarObj::DEFUZZ_COG);
  			return 0;
 			}
 
-		}while (strcmp(token.data(), "DEFUZZIFY") != 0);
+		}while (strcmp(token.c_str(), "DEFUZZIFY") != 0);
 
 	// eat the next token which is the name of the ouptut variable
 	file_contents >> token;
@@ -2060,11 +2172,11 @@ int FuzzyModelBase::load_defuzz_block_from_fcl_file(std::ifstream& file_contents
 		if (file_contents.eof())
 			{
 			// didn't find the "METHOD" keyword... set defaults
- 			set_defuzz_method(DefuzzVarObj::DEFUZZ_TYPE::COG);
+ 			set_defuzz_method(DefuzzVarObj::DEFUZZ_COG);
 			return 0;
 			}
 
-		}while ( strcmp(token.data(), "METHOD:") != 0) ;
+		}while ( strcmp(token.c_str(), "METHOD:") != 0) ;
 
 	// now get the method...
 
@@ -2081,14 +2193,14 @@ int FuzzyModelBase::load_defuzz_block_from_fcl_file(std::ifstream& file_contents
 	// *** NOTE: 'MoM' (Mean of Maximum) is not part of the standard, we added it ***
 	// AND we only currently support "CoG" and "MoM"
 
-	if (strcmp(token.data(), "CoG") == 0)
-		method = DefuzzVarObj::DEFUZZ_TYPE::COG;
-	else if (strcmp(token.data(), "MoM") == 0)
-		method = DefuzzVarObj::DEFUZZ_TYPE::MOM;
+	if (strcmp(token.c_str(), "CoG") == 0)
+		method = DefuzzVarObj::DEFUZZ_COG;
+	else if (strcmp(token.c_str(), "MoM") == 0)
+		method = DefuzzVarObj::DEFUZZ_MOM;
 	else
 		{
 		// default to Center of Gravity
-		method = DefuzzVarObj::DEFUZZ_TYPE::COG;
+		method = DefuzzVarObj::DEFUZZ_COG;
 		}
 	 
 	set_defuzz_method(method);
@@ -2145,9 +2257,9 @@ int FuzzyModelBase::set_output_dom(DOMType* out_set_dom_arr, int set_idx, DOMTyp
 		set_value = true;
 	else
 		{
-		if ((composition_method == FuzzyOutVariable::COMPOSITION_OPERATION::MIN) && ( new_value < current_dom) )
+		if ((composition_method == FuzzyOutVariable::COMPOSITION_OPERATION_MIN) && ( new_value < current_dom) )
 			set_value = true;
-		else if ((composition_method == FuzzyOutVariable::COMPOSITION_OPERATION::MAX) && ( new_value > current_dom))
+		else if ((composition_method == FuzzyOutVariable::COMPOSITION_OPERATION_MAX) && ( new_value > current_dom))
 			set_value = true;
 		}
 
@@ -2291,7 +2403,7 @@ FFLL_INLINE void FuzzyModelBase::clear_rules()
 
 FFLL_INLINE	const char* FuzzyModelBase::get_model_name() const
 {
-	return model_name.data();
+	return model_name.c_str();
 }; 
 const char* FuzzyModelBase::get_fcl_block_start() const 
 {
@@ -2377,8 +2489,8 @@ int FuzzyModelBase::set_inference_method(int method)
 
 	switch (method)
 		{
-		case INFERENCE_OPERATION::MIN:
-		case INFERENCE_OPERATION::MAX:
+		case INFERENCE_OPERATION_MIN:
+		case INFERENCE_OPERATION_MAX:
 
 			inference_method = method;
 			break;

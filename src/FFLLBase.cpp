@@ -43,7 +43,7 @@ wchar_t* errors[] =
 	L"Reached End Of File Before Reading Sets",
 	L"Model Already Has An Output Variable",
 	L"Error Allocating Memory",
-	L"Invalid Defuzzification Method",
+	L"Invalid Defuzzification Method",       
 	L"Invalid Composition Method",
 	L"Invalid Inference Method",
 	L"Error Opening File",
@@ -197,9 +197,10 @@ char* convert_to_ascii(const wchar_t* wstr, char replace_space /* = -1 */)
 // Date:	9/01/01
 // 
 // Modification History
-// Author	Date		Modification
-// ------	----		------------
-//
+// Author		Date		Modification
+// ------		----		------------
+// Michael Z	6/17/02		modified to use mbstwcs() rather than swprintf() cuz of
+//							problems with compiling on some systems with glib.
 //
 wchar_t* convert_to_wide_char(const char* astr)
 {
@@ -207,10 +208,11 @@ wchar_t* convert_to_wide_char(const char* astr)
 		return NULL;
 
  	// get the ascii version of the id...
-	wchar_t* wstr = new wchar_t[strlen(astr) + 1];
+	int wchar_len = strlen(astr) + 1;
+	wchar_t* wstr = new wchar_t[wchar_len];
 
- 	swprintf(wstr, L"%S", astr);
-
+ 	mbstowcs(wstr, astr, wchar_len);
+  
 	return wstr;
 
 } // end convert_to_wide_char()
@@ -247,7 +249,7 @@ const wchar_t* FFLLBase::get_msg_text() const
 		return NULL;
 
 	error_read = true;
- 	return((msg_text == L"") ? NULL : msg_text.data());
+ 	return((msg_text == L"") ? NULL : msg_text.c_str());
 
 }; // end FFLLBase::get_msg_text()
 
@@ -307,7 +309,7 @@ void FFLLBase::set_msg_text(int msg_id) const
 
 void FFLLBase::set_msg_text(const std::wstring _text) const
 {
-	set_msg_text(_text.data());
+	set_msg_text(_text.c_str());
 
 }; // end FFLLBase::set_msg_text()
 
@@ -507,7 +509,7 @@ static char sDecimalSeparator = '.'; // dot by default
 static char sThousantSeparator =','; // comma by default
 
 // call this to format a long to a string
-static char* __stdcall long2str( char* szBuffer, long lValue )
+static char*  long2str( char* szBuffer, long lValue )
 {
   char *p;                // pointer to traverse string
   char *firstdig;         // pointer to first digit

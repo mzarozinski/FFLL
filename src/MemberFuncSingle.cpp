@@ -241,7 +241,7 @@ void MemberFuncSingle::shrink(int x_delta )
  
 void MemberFuncSingle::set_ramp(int hi_lo_ind, int left_right_ind)
 {
-	ramp = MemberFuncBase::RAMP::NA; // N/A for this member func
+	ramp = MemberFuncBase::RAMP_NA; // N/A for this member func
 }; 
 // the "mid" x is sepecific to the shape... the start/end x funcs
 // are in the ancestor

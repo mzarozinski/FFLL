@@ -188,6 +188,6 @@ MOMDefuzzSetObj* MOMDefuzzVarObj::get_set_defuzz_obj(int set_idx) const
 
 int MOMDefuzzVarObj::get_defuzz_type() const 
 { 
-	return DefuzzVarObj::DEFUZZ_TYPE::MOM; 
+	return DefuzzVarObj::DEFUZZ_MOM; 
 };
  

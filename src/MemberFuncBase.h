@@ -88,23 +88,23 @@ class  MemberFuncBase : virtual public FFLLBase
 	////////////////////////////////////////
 
 	public:
-		static enum TYPE {S_CURVE, TRIANGLE, TRAPEZOID, SINGLETON};
-		static enum RAMP {NONE, LEFT, RIGHT, NA}; // NA is not applicable for singleton member funcs
+		enum TYPE {S_CURVE, TRIANGLE, TRAPEZOID, SINGLETON};
+		enum RAMP {RAMP_NONE, RAMP_LEFT, RAMP_RIGHT, RAMP_NA}; // NA is not applicable for singleton member funcs
 
 	protected:
  
  		NodePoint* nodes;	// array of "node" points for the curve
-		int			ramp;	// indicates if this term is a ramp. It can be one of the
-							// RAMP enum types defined in this class. A ramp is a membership
-							// function that has the 'y' axis as one of it's sides.
-							// For example a normal trapezoid memberhip function would look like this:
-							//                                       ___
-							//              Normal Trapezoid:       /   \
-							//                                       ___
-							//              Left Ramp Trapezoid:    |   \ 
-							//                                       ___
-							//              Right Ramp Trapezoid:   /   |  
-							//
+		int			ramp;	/* indicates if this term is a ramp. It can be one of the
+							** RAMP enum types defined in this class. A ramp is a membership
+							** function that has the 'y' axis as one of it's sides.
+							** For example a normal trapezoid memberhip function would look like this:
+							**                                       ___
+							**              Normal Trapezoid:       /   \
+							**                                       ___
+							**              Left Ramp Trapezoid:    |   \ 
+							**                                       ___
+							**              Right Ramp Trapezoid:   /   |  
+							*/
 		DOMType*	values;	// This points to an array that holds the 'y' values for this term.
 							// It has FuzzyVariableBase::x_array_count elements
 

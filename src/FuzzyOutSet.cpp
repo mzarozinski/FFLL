@@ -119,7 +119,7 @@ int FuzzyOutSet::set_defuzz_method(int type)
 	// build teh correct type of defuzz object based on the method passed in
 	switch(type)
 		{
-		case DefuzzVarObj::DEFUZZ_TYPE::COG:
+		case DefuzzVarObj::DEFUZZ_COG:
 
 			// create COG memory
 			defuzz_obj = new COGDefuzzSetObj(this);
@@ -127,7 +127,7 @@ int FuzzyOutSet::set_defuzz_method(int type)
 
 			break;
 
-		case DefuzzVarObj::DEFUZZ_TYPE::MOM:
+		case DefuzzVarObj::DEFUZZ_MOM:
 
 			// create COG memory
 			defuzz_obj = new MOMDefuzzSetObj(this);
@@ -230,10 +230,10 @@ RealType FuzzyOutSet::get_defuzz_x(int dom /* = -1 */)
 
 	int defuzz_type = defuzz_base->get_defuzz_type();
 
-	if (defuzz_type == DefuzzVarObj::DEFUZZ_TYPE::COG && dom < 0)
+	if (defuzz_type == DefuzzVarObj::DEFUZZ_COG && dom < 0)
 		return FLT_MIN; // invalid dom
 
-	if (defuzz_type == DefuzzVarObj::DEFUZZ_TYPE::COG)
+	if (defuzz_type == DefuzzVarObj::DEFUZZ_COG)
 		{
 		COGDefuzzSetObj* cog_defuzz = dynamic_cast<COGDefuzzSetObj*>(defuzz_base);
 		
@@ -241,7 +241,7 @@ RealType FuzzyOutSet::get_defuzz_x(int dom /* = -1 */)
  
 		} // end if CoG
 
-	if (defuzz_type == DefuzzVarObj::DEFUZZ_TYPE::MOM)
+	if (defuzz_type == DefuzzVarObj::DEFUZZ_MOM)
 		{
 		MOMDefuzzSetObj* mom_defuzz = dynamic_cast<MOMDefuzzSetObj*>(defuzz_base);
 

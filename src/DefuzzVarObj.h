@@ -52,7 +52,7 @@ class DefuzzVarObj : virtual public FFLLBase
 
 	public:
 		// types of defuzzification: Center of Gravity, Mean of Maximum 
-		enum DEFUZZ_TYPE { COG, MOM };
+		enum DEFUZZ_TYPE { DEFUZZ_COG, DEFUZZ_MOM };
 
 }; // end class DefuzzVarObj
  

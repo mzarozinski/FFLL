@@ -164,7 +164,7 @@ std::vector<ModelContainer> model_list; // list of the fuzzy models being used
 // ------	----		------------
 //
 //  
-int __stdcall ffll_new_child(int model_idx)
+int WIN_FFLL_API ffll_new_child(int model_idx)
 {
 	ModelContainer* container = get_model(model_idx);
 
@@ -204,7 +204,7 @@ int __stdcall ffll_new_child(int model_idx)
 // ------	----		------------
 //
 //  
-int __stdcall ffll_set_value(int model_idx, int child_idx, int var_idx, double value)
+int WIN_FFLL_API ffll_set_value(int model_idx, int child_idx, int var_idx, double value)
 {
 	ModelContainer* container = get_model(model_idx);
 
@@ -244,7 +244,7 @@ int __stdcall ffll_set_value(int model_idx, int child_idx, int var_idx, double v
 //
 // 
  
-double __stdcall ffll_get_output_value(int model_idx, int child_idx)
+double WIN_FFLL_API ffll_get_output_value(int model_idx, int child_idx)
 {
 	ModelContainer* container = get_model(model_idx);
 
@@ -285,7 +285,7 @@ double __stdcall ffll_get_output_value(int model_idx, int child_idx)
 //
 // 
  
-int __stdcall ffll_load_fcl_file(int model_idx, const char* file)
+int WIN_FFLL_API ffll_load_fcl_file(int model_idx, const char* file)
 {
 	ModelContainer* container = get_model(model_idx);
 
@@ -329,7 +329,7 @@ int __stdcall ffll_load_fcl_file(int model_idx, const char* file)
 //
 // 
 
-const char* __stdcall ffll_get_msg_textA(int model_idx)
+const char* WIN_FFLL_API ffll_get_msg_textA(int model_idx)
 {
 	ModelContainer* container = get_model(model_idx);
 
@@ -360,7 +360,7 @@ const char* __stdcall ffll_get_msg_textA(int model_idx)
 // ------	----		------------
 //
 // 
-const wchar_t* __stdcall ffll_get_msg_textW(int model_idx)
+const wchar_t* WIN_FFLL_API ffll_get_msg_textW(int model_idx)
 {
 	ModelContainer* container = get_model(model_idx);
 
@@ -392,7 +392,7 @@ const wchar_t* __stdcall ffll_get_msg_textW(int model_idx)
 // ------	----		------------
 //
 // 
-int __stdcall ffll_new_model()
+int WIN_FFLL_API ffll_new_model()
 {
 	// create an empty container and put it at the back
 	// of our list. 
@@ -428,7 +428,7 @@ int __stdcall ffll_new_model()
 // ------	----		------------
 //
 //  
-int __stdcall ffll_close_model(int model_idx)
+int WIN_FFLL_API ffll_close_model(int model_idx)
 {
 	ModelContainer* container = get_model(model_idx);
 

@@ -1,5 +1,5 @@
 //
-// File:	COGDefuzzSetObj.h	
+// File:	COGDefuzzSetObj.cpp	
 //
 // Purpose:	Set object for Center of Gravity Defuzzification method
 //
@@ -309,7 +309,7 @@ void COGDefuzzSetObj::set_moment(int _idx, RealType val)
  
 int COGDefuzzSetObj::get_defuzz_type() const
 { 
-	return DefuzzVarObj::DEFUZZ_TYPE::COG; 
+	return DefuzzVarObj::DEFUZZ_COG; 
 };
 
  

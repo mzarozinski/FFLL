@@ -63,7 +63,7 @@ class   FuzzyOutVariable : virtual public FuzzyVariableBase
 
 	public:
 
-		enum COMPOSITION_OPERATION { MIN, MAX };	// composition is the type of operation to apply to the output set.  When we evaluate the rules, we
+		enum COMPOSITION_OPERATION { COMPOSITION_OPERATION_MIN, COMPOSITION_OPERATION_MAX };	// composition is the type of operation to apply to the output set.  When we evaluate the rules, we
 													// may have more than one DOM for a single output set.  
 													//
 													// For (a trivial) example consider a system with 2 input variables and one output
