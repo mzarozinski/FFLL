@@ -431,6 +431,7 @@ int WIN_FFLL_API ffll_new_model()
 // Author		Date		Modification
 // ------		----		------------
 // Michael Z	4/03		Changed to use list iterator
+// Michael Z	4/03		Changed the while loop so it returns the correct model
 //
 ModelContainer* get_model(int idx)
 {
@@ -450,8 +451,8 @@ ModelContainer* get_model(int idx)
 
 	while(tmp_idx--)
 		{
-		ret_val = &(*it);
 		it++;
+		ret_val = &(*it);
 		}
 
 	return ret_val;  
