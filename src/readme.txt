@@ -1,14 +1,14 @@
 FFLL API Readme
 ---------------
 
-Version: 2.2.0
-Release Date: 04/24/03
+Version: 2.2.1
+Release Date: 05/1/03
 
 
 Release History
 ----------------
 
-April 24, 2003 v2.2.0
+May 1, 2003 v2.2.1
 
 * change to COGDefuzzSetObj.cpp that was causing slightly incorrect output values
 * updates to FFLLAPI.cpp to use std::list instead of std::vector to avoid destructors getting called before they should
