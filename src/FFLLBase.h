@@ -17,6 +17,8 @@
 // disable "did not inline" warnings 
 #pragma warning(disable:4710) 
 
+
+
 #ifndef _FFLLBASE_H
 #define _FFLLBASE_H
 
@@ -33,7 +35,7 @@
 #define STR_COPY_OF		LITERAL_BASE + 4
 
 
-#define ERROR_BASE		2000
+#define ERROR_BASE					2000
 #define ERR_VAR_NON_UNIQUE_ID		ERROR_BASE + 0
 #define ERR_SET_NON_UNIQUE_ID		ERROR_BASE + 1
 #define ERR_SAME_LEFT_RIGHT_VALS	ERROR_BASE + 2
@@ -52,7 +54,7 @@
 #define ERR_VAR_MAX_VALUE			ERROR_BASE + 15
 
 
-#define WARNING_BASE		4000
+#define WARNING_BASE				4000
 
 
 // these are used to export FFLL classes.  The standard API
@@ -91,9 +93,13 @@
 #include <assert.h>
 #include <float.h> // needed for FLT_MIN
 
+// THIS version must be used by any caller outside this DLL otherwize we get
+// mem deallocation errors (in debug mode)
+// FFLL_API int convert_to_ascii(const wchar_t* wstr, char* astr, char replace_space = -1 );
 
-FFLL_API char* convert_to_ascii(const wchar_t* wstr, char replace_space = -1 );
-FFLL_API wchar_t* convert_to_wide_char(const char* astr);
+// these 2 are NOT exported!
+char* convert_to_ascii(const wchar_t* wstr, char replace_space = -1 );
+wchar_t* convert_to_wide_char(const char* astr);
 
 namespace FFLLDatatypes 
 {

@@ -62,7 +62,7 @@ class FFLL_API FuzzyVariableBase :  virtual public FFLLBase
 		RealType get_right_x() const ;
 		RealType get_idx_multiplier() const;
 		virtual DOMType get_dom(int set_idx, int x_position = -1) const ;
- 		std::string get_model_name() const;
+ 		const char* get_model_name() const;
 		int get_rule_index(int _set_idx = -1) const ;
 		int get_num_of_sets(void) const ;
  		FFLL_INLINE short get_index() const;

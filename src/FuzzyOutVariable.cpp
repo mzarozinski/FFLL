@@ -21,6 +21,9 @@
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+
+#include "debug.h"
+
 #endif
 
 //

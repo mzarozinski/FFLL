@@ -25,6 +25,9 @@ ModelContainer* get_model(int idx);
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+
+#include "debug.h"
+
 #endif
 
 // Declare the classes here, rather than in a .h so everything is in one place

@@ -22,6 +22,9 @@
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
+
+#include "debug.h"
+
 #endif
  
 
@@ -462,7 +465,7 @@ RealType FuzzySetBase::get_idx_multiplier() const
 	return get_parent()->get_idx_multiplier();
 };
 
-std::string FuzzySetBase::get_model_name() const
+const char* FuzzySetBase::get_model_name() const
 {
 	return get_parent()->get_model_name();	
 };

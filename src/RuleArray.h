@@ -41,6 +41,8 @@ class  FFLL_API  RuleArray  :  virtual public FFLLBase
 		// get funcs
 		int get_max() const ;
  		RuleArrayType get_rule(int index) const ;
+		const char* get_model_name() const;
+		FuzzyModelBase* get_parent(void) const;
 
 		// set funcs
 		int set(RuleArrayType* source, int size);

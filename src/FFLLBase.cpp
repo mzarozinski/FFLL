@@ -15,6 +15,9 @@
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+
+#include "debug.h"
+
 #endif
  
 // define literals, warning and error messages  
@@ -104,13 +107,16 @@ FFLLBase::FFLLBase(void* _parent)
 // ------	----		------------
 //
 //
-FFLL_API char* convert_to_ascii(const wchar_t* wstr, char replace_space /* = -1 */)
+char* convert_to_ascii(const wchar_t* wstr, char replace_space /* = -1 */)
 {
+#ifdef TEST_MEM_LEAK_REPORTING
+	char *mem_leak = new char[33];
+#endif
 	if (wstr == NULL)
 		return NULL;
 
  	// get the ascii version of the id...
-	char* astr = new char[wcslen(wstr) + 1];
+	char* astr = new char[wcslen(wstr) + 10];
 
  	sprintf(astr, "%S", wstr);
 
@@ -132,7 +138,46 @@ FFLL_API char* convert_to_ascii(const wchar_t* wstr, char replace_space /* = -1 
 	return astr;
 
 } // end convert_to_ascii()
+/*
+FFLL_API int convert_to_ascii(const wchar_t* wstr, char* astr, char replace_space / * = -1 * /)
+{
+	if (astr == NULL)
+		{
+		return -1;
+		}
 
+	if (wstr == NULL)
+		{
+		astr = NULL;
+		return 0;
+		}
+ 
+#ifdef TEST_MEM_LEAK_REPORTING
+	char *mem_leak = new char[33];
+#endif
+  
+ 	sprintf(astr, "%S", wstr);
+
+	// if a 'replace_space' character was passed, replace any spaces with that char
+	// replace any spaces with underscores
+
+	if (replace_space >= 0)
+		{
+		int len = strlen(astr);
+
+		while (len)
+			{
+			if (astr[len] == ' ')
+				astr[len] = replace_space;
+			len--;
+			}
+		} // end if replace space
+
+	return 0;
+
+} // end convert_to_ascii()
+
+  */
   
 //
 // Function:	convert_to_wide_char()
@@ -156,7 +201,7 @@ FFLL_API char* convert_to_ascii(const wchar_t* wstr, char replace_space /* = -1 
 // ------	----		------------
 //
 //
-FFLL_API wchar_t* convert_to_wide_char(const char* astr)
+wchar_t* convert_to_wide_char(const char* astr)
 {
 	if (astr == NULL)
 		return NULL;

@@ -23,6 +23,9 @@
 #ifdef _DEBUG  
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
+
+#include "debug.h"
+
 #endif
 
 //
@@ -84,6 +87,11 @@ FuzzyModelBase::~FuzzyModelBase()
 //
 FuzzyModelBase::FuzzyModelBase() : FFLLBase(NULL)
 {
+
+#ifdef TEST_MEM_LEAK_REPORTING
+	char *mem_leak = new char[43];
+#endif
+
 	input_var_count = 0; 
 
   	rules = NULL;  
@@ -681,7 +689,7 @@ int FuzzyModelBase::delete_set(int _var_idx, int _set_idx)
 		_num_sets = input_var_arr[i]->get_num_of_sets();
 		if (i == _var_idx)
 			_num_sets--;	// SUBTRACT for the set we're deleting
-		if (_num_sets)
+//		if (_num_sets) // OK to mult by 0 if ANY of the inputs is 0 there can't be any rules!
 			new_mem_size *= _num_sets;
 
 		} // end loop through input variables

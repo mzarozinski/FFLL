@@ -10,10 +10,6 @@
 // It is released under the BSD license, see http://ffll.sourceforge.net/license.txt for the full text.
 //
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 #include "COGDefuzzVarObj.h"
 #include "COGDefuzzSetObj.h"
@@ -21,6 +17,13 @@ static char THIS_FILE[] = __FILE__;
 #include "FuzzyOutVariable.h"
 
 
+#ifdef _DEBUG
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+
+#include "debug.h"
+ 
+#endif
 //
 // Function:	COGDefuzzVarObj()
 // 

@@ -19,6 +19,9 @@
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
+
+#include "debug.h"
+
 #endif
 
 // init static variables to a reasonable value. We add one to each array count to
@@ -882,6 +885,7 @@ int FuzzyVariableBase::load_sets_from_fcl_file(std::ifstream& file_contents)
 			if (file_contents.eof())
 				{
 				set_msg_text(ERR_EOF_READING_SETS);
+				delete[] aid;
  				return -1; 
 				}
 
@@ -1381,9 +1385,12 @@ void FuzzyVariableBase::set_rule_index(int _rule_index, int set_idx /* = -1 */)
 		} // end if set rule_index for set
 
 };  
+ 
 
-std::string FuzzyVariableBase::get_model_name() const
+   
+const char* FuzzyVariableBase::get_model_name() const
 {
+
  	return get_parent()->get_model_name();
 };
  

@@ -12,10 +12,14 @@
 //
  
 #include "RuleArray.h"
+#include "FuzzyModelBase.h"
  
 #ifdef _DEBUG  
 #undef THIS_FILE
 static char THIS_FILE[]=__FILE__;
+
+#include "debug.h"
+
 #endif
 
 //
@@ -250,4 +254,20 @@ void RuleArray::remove_rule(int index)
 	assert(index < max);
 
 	rules[index] = NO_RULE;
+};
+
+FuzzyModelBase* RuleArray::get_parent(void) const
+{
+	return static_cast< FuzzyModelBase*>(FFLLBase::get_parent());
+};
+ 
+const char* RuleArray::get_model_name() const
+{
+	FuzzyModelBase* par = get_parent();
+
+	if (!par)
+		return NULL;
+
+	return par->get_model_name();
+
 };

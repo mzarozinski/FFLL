@@ -11,13 +11,17 @@
 // It is released under the BSD license, see http://ffll.sourceforge.net/license.txt for the full text.
 //
  
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
 
 #include "DefuzzSetObj.h"
 #include "FuzzyOutSet.h"
+
+#ifdef _DEBUG
+#undef THIS_FILE
+static char THIS_FILE[] = __FILE__;
+
+#include "debug.h"
+
+#endif
 
 //
 // Function:	DefuzzSetObj()

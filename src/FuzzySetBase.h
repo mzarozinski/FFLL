@@ -45,8 +45,8 @@ class FFLL_API  FuzzySetBase : virtual  public FFLLBase
  	 	virtual FuzzySetBase& operator=(const FuzzySetBase& copy_from);
 
 		// get functions
-
-		std::string get_model_name() const;
+ 
+		const char* get_model_name() const;
 		const wchar_t* get_id(void) const;
 		NodePoint get_node(int idx);
 		int get_node_count() const ;
