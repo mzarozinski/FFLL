@@ -75,7 +75,7 @@ BEGIN
             VALUE "FileDescription", "FFLL API\0"
             VALUE "FileVersion", "2, 1, 0, 0\0"
             VALUE "InternalName", "FFLL API\0"
-            VALUE "LegalCopyright", "Copyright © 2001 Louder Than A Bomb! Software\0"
+            VALUE "LegalCopyright", "Copyright © 2002 Louder Than A Bomb! Software\0"
             VALUE "LegalTrademarks", "\0"
             VALUE "OriginalFilename", "\0"
             VALUE "PrivateBuild", "\0"
