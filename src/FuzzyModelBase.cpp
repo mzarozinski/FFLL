@@ -1336,7 +1336,7 @@ void FuzzyModelBase::save_rules_to_fcl_file(std::ofstream& file_contents) const
 
 	int composition = get_composition_method();
 	
-	file_contents << "\tACCUM:";
+	file_contents << "\tACCU:";
 
   	if (composition == FuzzyOutVariable::COMPOSITION_OPERATION::MIN)  
 		file_contents << "BSUM";
@@ -1666,7 +1666,7 @@ int FuzzyModelBase::load_vars_from_fcl_file(std::ifstream& file_contents, bool o
 				strncpy(value, num_start, num_len);
 
 				start_val = strtod(value, &stop_scan);
-
+ 
 				if (fabs(start_val) == HUGE_VAL)
 					{
 					// error converting...
@@ -1859,7 +1859,7 @@ int FuzzyModelBase::load_rules_from_fcl_file(std::ifstream& file_contents)
 		return -1;
 		}
 
-	// read in the ACCUM method...
+	// read in the ACCU method...
 
 	line[0] = '\0';
 	// skip blank lines
@@ -1869,7 +1869,7 @@ int FuzzyModelBase::load_rules_from_fcl_file(std::ifstream& file_contents)
 	char* accum = strtok(line, seps);
 
 	// sanity check
-	if (strncmp(accum, "ACCUM", strlen("ACCUM")) != 0)
+	if (strncmp(accum, "ACCU", strlen("ACCU")) != 0)
 		{
 		set_msg_text(ERR_INVALID_FILE_FORMAT);
 		return -1;
