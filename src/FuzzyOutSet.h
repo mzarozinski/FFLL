@@ -23,7 +23,7 @@ class FuzzyOutVariable;
 // to the DefuzzSetObj abstract class. DefuzzSetObj handles all the calcuations
 // needed for the defuzzification process.
 //
-class FFLL_API FuzzyOutSet : virtual public FuzzySetBase   
+class  FuzzyOutSet : virtual public FuzzySetBase   
 {
 
 	////////////////////////////////////////

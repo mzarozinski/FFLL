@@ -56,21 +56,7 @@
 
 #define WARNING_BASE				4000
 
-
-// these are used to export FFLL classes.  The standard API
-// is exported via a .DEF file because that is the most flexible
-// way and we can avoid name mangling
-
-#ifdef _STATIC_LIB
-#	define FFLL_API 
-#else
-#	ifdef FFLL_EXPORTS
-#		define FFLL_API __declspec(dllexport)
-#	else
-#		define FFLL_API __declspec(dllimport)
-#	endif
-#endif // not _STATIC_LIB
-
+ 
  
 // if FFLL is in a DLL we do not want to have inline functions.  They would
 // require the program using the library to be re linked.  Without inlines
@@ -137,7 +123,7 @@ typedef unsigned char DOMType;
 // as a friend function. It is the only operator that cannot be 
 // inherited; a derived class cannot use a base class's assignment operator. 
 
-class FFLL_API NodeValue
+class  NodeValue
 {
 	public:
 		operator int();
@@ -154,7 +140,7 @@ class FFLL_API NodeValue
 
 }; // end class NodeValue
 
-class FFLL_API XNodeValue : public NodeValue
+class  XNodeValue : public NodeValue
 {
 	public:
  		int& operator=(const int& _value); // can't be inherited
@@ -164,7 +150,7 @@ class FFLL_API XNodeValue : public NodeValue
 
 }; // end class XNodeValue
 
-class FFLL_API YNodeValue : public NodeValue
+class  YNodeValue : public NodeValue
 {
 	public:
  		int& operator=(const int& _value); // can't be inherited
@@ -174,7 +160,7 @@ class FFLL_API YNodeValue : public NodeValue
 
 }; // end class YNodeValue
 
-class FFLL_API NodePoint 
+class  NodePoint 
 {
 	public:
 		XNodeValue x;
@@ -201,12 +187,12 @@ using namespace FFLLDatatypes ;
 // so we can get the parent to go up the model hierarchy and holds a string that contains
 // an error or warning message.
 // Note:  Since each object has it's own msg_text string, to report an error you need to
-// propigate it up the classes.  For example if an error occurs in a set the calling
+// propagate it up the classes.  For example if an error occurs in a set the calling
 // function should detect the error and set the msg_text for the set's variable, then the caller
 // for the variable object should set it for the model object - until it's shown to the user.
 //
 
-class FFLL_API FFLLBase
+class  FFLLBase
 {
 
 	public:

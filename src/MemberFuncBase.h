@@ -24,7 +24,7 @@ class FuzzySetBase;
 // This is an abstract class that defines the type of "curve" a set has.
 //
 
-class FFLL_API MemberFuncBase : virtual public FFLLBase  
+class  MemberFuncBase : virtual public FFLLBase  
 {
  	////////////////////////////////////////
 	////////// Member Functions ////////////

@@ -24,7 +24,7 @@ class FuzzyModelBase;
 // This class holds the rules array for the model
 //
 
-class  FFLL_API  RuleArray  :  virtual public FFLLBase  
+class  RuleArray  :  virtual public FFLLBase  
 {
  
  	////////////////////////////////////////

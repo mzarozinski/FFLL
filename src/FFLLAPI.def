@@ -7,9 +7,10 @@
 
 EXPORTS
   	ffll_new_model			@1
-	ffll_load_fcl_file		@2
-	ffll_new_child			@3
-	ffll_set_value			@4
-	ffll_get_output_value	@5
-	ffll_get_msg_textA		@6
-	ffll_get_msg_textW		@7
+ 	ffll_close_model		@2
+	ffll_load_fcl_file		@3
+	ffll_new_child			@4
+	ffll_set_value			@5
+	ffll_get_output_value	@6
+	ffll_get_msg_textA		@7
+	ffll_get_msg_textW		@8

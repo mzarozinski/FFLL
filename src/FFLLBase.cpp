@@ -139,7 +139,7 @@ char* convert_to_ascii(const wchar_t* wstr, char replace_space /* = -1 */)
 
 } // end convert_to_ascii()
 /*
-FFLL_API int convert_to_ascii(const wchar_t* wstr, char* astr, char replace_space / * = -1 * /)
+ int convert_to_ascii(const wchar_t* wstr, char* astr, char replace_space / * = -1 * /)
 {
 	if (astr == NULL)
 		{

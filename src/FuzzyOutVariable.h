@@ -25,7 +25,7 @@ class DefuzzVarObj;
 // output variables) and makes sure that the output variable contains FuzzyOutSet objects
 // as opposed to the FuzzySetBase that the input variables use.
 //
-class  FFLL_API FuzzyOutVariable : virtual public FuzzyVariableBase  
+class   FuzzyOutVariable : virtual public FuzzyVariableBase  
 {
 	////////////////////////////////////////
 	////////// Member Functions ////////////

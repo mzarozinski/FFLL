@@ -39,10 +39,10 @@ static char THIS_FILE[] = __FILE__;
 // if each "step" was 1. So we need to add 1 element to the array to get the results we want.
 
 
-FFLL_API ValuesArrCountType FuzzyVariableBase::x_array_count = 201;
-FFLL_API ValuesArrCountType FuzzyVariableBase::x_array_max_idx = FuzzyVariableBase::x_array_count - 1;
-FFLL_API DOMType FuzzyVariableBase::dom_array_count = 101;
-FFLL_API DOMType FuzzyVariableBase::dom_array_max_idx = FuzzyVariableBase::dom_array_count - 1;
+ValuesArrCountType FuzzyVariableBase::x_array_count = 201;
+ValuesArrCountType FuzzyVariableBase::x_array_max_idx = FuzzyVariableBase::x_array_count - 1;
+DOMType FuzzyVariableBase::dom_array_count = 101;
+DOMType FuzzyVariableBase::dom_array_max_idx = FuzzyVariableBase::dom_array_count - 1;
  
 
 //

@@ -25,7 +25,7 @@ class MemberFuncSingle;
 // to be altered.
 // 
 
-class FFLL_API   MemberFuncSCurve :  virtual public MemberFuncBase  
+class    MemberFuncSCurve :  virtual public MemberFuncBase  
 {
  	////////////////////////////////////////
 	////////// Member Functions ////////////

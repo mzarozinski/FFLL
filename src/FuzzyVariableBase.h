@@ -17,7 +17,7 @@
 
 class FuzzySetBase;
 class FuzzyModelBase;
-class FuzzyRuleIPC;
+class FuzzyModelIPC;
  
 
 // 
@@ -27,7 +27,7 @@ class FuzzyRuleIPC;
 // sets that define the membership functions for the variable.
 //
 
-class FFLL_API FuzzyVariableBase :  virtual public FFLLBase  
+class  FuzzyVariableBase :  virtual public FFLLBase  
 {
 	////////////////////////////////////////
 	////////// Member Functions ////////////

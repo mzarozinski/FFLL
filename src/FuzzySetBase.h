@@ -28,7 +28,7 @@ class FuzzyModelBase;
 // the specific information for the curve that defines the set.
 //
 
-class FFLL_API  FuzzySetBase : virtual  public FFLLBase  
+class   FuzzySetBase : virtual  public FFLLBase  
 { 
 	////////////////////////////////////////
 	////////// Member Functions ////////////

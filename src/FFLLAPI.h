@@ -15,7 +15,7 @@
 #include <stddef.h>
 
 // Official API
-// NOTE: we don't use __declspec(dllexport) (FFLL_API #define) to export, we use a .def file as that is
+// NOTE: we don't use __declspec(dllexport) to export, we use a .def file as that is
 // the most generic way and avoids any name mangling (or decoration) via aliases
 // (MSVC mangles names EVEN with 'extern "C"' if calling convention is __stdcall) and allows
 // us to explicitly state the ordinal to avoid version conflicts in the future.

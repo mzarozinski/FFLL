@@ -176,7 +176,8 @@ int __stdcall ffll_new_child(int model_idx)
 
 	return container->child_list.size() - 1;
  
-}; // end ffll_get_child()
+}; // end ffll_new_child()
+
 
 //
 // Function:	ffll_set_value()
@@ -403,6 +404,41 @@ int __stdcall ffll_new_model()
 	return model_list.size() - 1;
 
 }; // end ffll_new_model()
+
+
+//
+// Function:	ffll_close_model()
+// 
+// Purpose:		Closes the model for the index passed in.
+//
+// Arguments:	
+//
+//		int		model_idx	- index of the model 
+//
+// Returns:
+//
+//		0 - success
+//		non-zero - failure
+//
+// Author:	Michael Zarozinski
+// Date:	2/02
+// 
+// Modification History
+// Author	Date		Modification
+// ------	----		------------
+//
+//  
+int __stdcall ffll_close_model(int model_idx)
+{
+	ModelContainer* container = get_model(model_idx);
+
+	assert(container->model != NULL); // make sure you call ffll_load_fcl_file() before this func.
+
+	delete container;
+
+	return 0;
+ 
+}; // end ffll_close_model()
 
 //
 // Function:	get_model()

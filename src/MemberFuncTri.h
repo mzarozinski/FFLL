@@ -22,7 +22,7 @@
 // This is the triangle shaped membership function. It consists of 3 points.
 // 
  
-class FFLL_API MemberFuncTri :  virtual public MemberFuncBase  
+class  MemberFuncTri :  virtual public MemberFuncBase  
 {
  	////////////////////////////////////////
 	////////// Member Functions ////////////

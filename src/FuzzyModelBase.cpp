@@ -544,10 +544,16 @@ int FuzzyModelBase::add_set(int _var_idx,  const FuzzySetBase* _set)
  
 	FuzzyVariableBase* var = get_var(_var_idx); 
 
+	// _set is NOT modified in add_set, so we can NOT rely on it's index value or
+	// anything. add_set() adds the set so we must use that for any furthur information
+	// we need.
+
 	int ret_val = var->add_set(_set);  
 	
 	if (ret_val)
 		return ret_val;
+
+	FuzzySetBase* new_set = var->get_set(var->get_num_of_sets() - 1);
 
 	calc_rule_index_wrapper(); // re-calc rule_index values now that we have a new set
 
@@ -586,14 +592,14 @@ int FuzzyModelBase::add_set(int _var_idx,  const FuzzySetBase* _set)
 			calc_rule_components(new_mem_idx, set_idx_array);
 
 			// if this index involves the NEW set leave it as NO_RULE
-			if (set_idx_array[_var_idx] == _set->get_index())
+			if (set_idx_array[_var_idx] == new_set->get_index())
  				continue;
  
 			// copy the rule from the OLD array to the NEW array
  				
 			DOMType a = rules->get_rule(rule_index);
-			if (a != NO_RULE)
-				int x = 23;
+		//	if (a != NO_RULE)
+			//	int x = 23;
 			new_mem[new_mem_idx] = rules->get_rule(rule_index);
 
 			// increment the index into the OLD rules...

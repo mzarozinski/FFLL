@@ -27,7 +27,7 @@ class RuleArray;
 //			and rules that define a model.
 //
  
-class FFLL_API FuzzyModelBase : virtual public FFLLBase  
+class  FuzzyModelBase : virtual public FFLLBase  
 {
 	////////////////////////////////////////
 	////////// Member Functions ////////////

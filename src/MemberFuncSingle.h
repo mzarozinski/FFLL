@@ -24,7 +24,7 @@
 // involved.
 // 
  
-class FFLL_API   MemberFuncSingle : virtual public MemberFuncBase  
+class    MemberFuncSingle : virtual public MemberFuncBase  
 {
  	////////////////////////////////////////
 	////////// Member Functions ////////////

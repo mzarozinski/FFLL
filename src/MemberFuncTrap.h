@@ -20,7 +20,7 @@
 // This is the trapezoid shaped membership function. It consists of 4 points.
 // 
 
-class FFLL_API  MemberFuncTrap :  virtual public MemberFuncBase  
+class   MemberFuncTrap :  virtual public MemberFuncBase  
 {
  	////////////////////////////////////////
 	////////// Member Functions ////////////
