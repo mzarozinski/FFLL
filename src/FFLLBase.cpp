@@ -32,7 +32,7 @@ wchar_t* errors[] =
 	{ 
 	L"Variable Identifier Must Be Unique",
 	L"Set Identifier Must Be Unique Within The Variable",
-	L"Min/Max Values Can Not Be The Same",
+	L"The Variable's Minimum And Maximum Values Can Not Be The Same",
 	L"Invalid File Format",
 	L"Can Not Remove Output Variable",
 	L"Reached End Of File Before Reading Variables",
@@ -43,7 +43,9 @@ wchar_t* errors[] =
 	L"Invalid Defuzzification Method",
 	L"Invalid Composition Method",
 	L"Invalid Inference Method",
-	L"Error Opening File"
+	L"Error Opening File",
+	L"Error Reading Variable Minimum Value",
+	L"Error Reading Variable Maximum Value"
 	};
 wchar_t* warnings[] = 
 	{ 
@@ -104,6 +106,9 @@ FFLLBase::FFLLBase(void* _parent)
 //
 FFLL_API char* convert_to_ascii(const wchar_t* wstr, char replace_space /* = -1 */)
 {
+	if (wstr == NULL)
+		return NULL;
+
  	// get the ascii version of the id...
 	char* astr = new char[wcslen(wstr) + 1];
 
@@ -153,6 +158,9 @@ FFLL_API char* convert_to_ascii(const wchar_t* wstr, char replace_space /* = -1 
 //
 FFLL_API wchar_t* convert_to_wide_char(const char* astr)
 {
+	if (astr == NULL)
+		return NULL;
+
  	// get the ascii version of the id...
 	wchar_t* wstr = new wchar_t[strlen(astr) + 1];
 
@@ -445,3 +453,63 @@ void YNodeValue::validate()
 	if (value >= FuzzyVariableBase::get_dom_array_count())
 		value = FuzzyVariableBase::get_dom_array_max_idx();
 };
+
+
+
+
+
+static char sDecimalSeparator = '.'; // dot by default
+static char sThousantSeparator =','; // comma by default
+
+// call this to format a long to a string
+static char* __stdcall long2str( char* szBuffer, long lValue )
+{
+  char *p;                // pointer to traverse string
+  char *firstdig;         // pointer to first digit
+  char temp;              // temp char
+  unsigned digval;        // value of digit
+  unsigned long val;
+
+  p = szBuffer;
+
+  if (lValue < 0 ) {
+      // negative, so output '-' and negate
+     *p++ = '-';
+     val = (unsigned long)(-(long)lValue); // make it positive!!
+  } else
+     val = lValue;
+
+  firstdig = p;    // save pointer to first digit
+
+  int iDecimalPos = 0;
+
+  do {
+     iDecimalPos ++;
+     if (iDecimalPos != 4)
+     {
+       digval = (unsigned) (val % 10);
+       val /= 10;                     // get next digit
+       *p++ = (char) (digval + '0');  // and store the digit
+     } else
+     {
+       *p++ = sThousantSeparator;
+       iDecimalPos = 0;
+     }
+  } while (val > 0);
+
+  //  We now have the digit of the number in the buffer, 
+  // but in reverse order.  Thus we reverse them now.
+
+  *p-- = '\0';    // terminate string; p points to last digit
+
+  do {
+      temp = *p;
+      *p = *firstdig;
+      *firstdig = temp;   // swap *p and *firstdig
+      --p;
+      ++firstdig;         
+  } while (firstdig < p); // repeat until halfway
+
+  return szBuffer;
+}
+

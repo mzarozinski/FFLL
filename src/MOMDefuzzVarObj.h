@@ -48,7 +48,7 @@ class MOMDefuzzVarObj : public DefuzzVarObj
 		int get_defuzz_type() const ;
 
 		// misc functions
- 		float calc_value(DOMType* out_set_dom_arr );
+ 		RealType calc_value(DOMType* out_set_dom_arr );
  
 	protected:
 

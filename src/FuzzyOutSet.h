@@ -14,6 +14,7 @@
  
 #include "FuzzySetBase.h"
 class DefuzzSetObj;
+class FuzzyOutVariable;
 
 // 
 // Class:	FuzzyOutSet
@@ -36,10 +37,12 @@ class FFLL_API FuzzyOutSet : virtual public FuzzySetBase
  
 		// get functions
 		DefuzzSetObj* get_defuzz_obj() const;
- 
+		RealType get_defuzz_x(int dom = -1);
+ 		FuzzyOutVariable* get_parent() const;
+
 		// set functions
 		int set_defuzz_method(int type);
-
+ 
 	private:
 
 		void calc();

@@ -54,7 +54,6 @@ class FFLL_API FuzzyModelBase : virtual public FFLLBase
 		FFLL_INLINE const char* get_model_name() const;
 
 		// set functions
- 		int set_value(int var_idx, float value);  
  		int set_defuzz_method(int method);
 		virtual int set_inference_method(int method);
 		virtual int set_composition_method(int method);
@@ -69,8 +68,8 @@ class FFLL_API FuzzyModelBase : virtual public FFLLBase
 		// variable/set functions
 
 		virtual int delete_variable(int _var_idx);
-		virtual int add_input_variable(const wchar_t* _name = NULL, float start_x = 0, float end_x = 100, bool create_unique_id = true);
-		virtual int add_output_variable(const wchar_t* _name = NULL, float start_x = 0, float end_x = 100, bool create_unique_id = true);
+		virtual int add_input_variable(const wchar_t* _name = NULL, RealType start_x = 0, RealType end_x = 100, bool create_unique_id = true);
+		virtual int add_output_variable(const wchar_t* _name = NULL, RealType start_x = 0, RealType end_x = 100, bool create_unique_id = true);
 		bool is_var_id_unique(const wchar_t* _id, int _var_idx) const;
    		virtual int delete_set(int _var_idx, int _set_idx);
   	 	int add_set(int var_idx, const FuzzySetBase* _set);
@@ -85,8 +84,8 @@ class FFLL_API FuzzyModelBase : virtual public FFLLBase
 		// misc functions
  		void calc_rule_components(int rule_index, int* set_idx_array) const; 
 		void calc_rule_index_wrapper(void);
-		float calc_output(short*  var_idx_arr, DOMType* out_set_dom_arr)  ;
-		ValuesArrCountType convert_value_to_idx(int var_idx, float value) const; 
+		RealType calc_output(short*  var_idx_arr, DOMType* out_set_dom_arr)  ;
+		ValuesArrCountType convert_value_to_idx(int var_idx, RealType value) const; 
  		static void validate_fcl_identifier(std::ofstream& file_contents, std::string identifier);
 
 	protected:

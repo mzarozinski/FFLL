@@ -49,7 +49,7 @@ class FFLL_API MemberFuncBase : virtual public FFLLBase
 		DOMType get_value(int idx) const ;
 		DOMType get_dom(int idx);
 		FuzzySetBase* get_parent() const  ;
-		float get_left_x() const; 
+		RealType get_left_x() const; 
 		virtual int get_center_x(void) const;
 		virtual int get_node_count() const = 0;
 		virtual int get_func_type() const = 0;
@@ -59,7 +59,7 @@ class FFLL_API MemberFuncBase : virtual public FFLLBase
 		virtual void set_node(int idx, int x, int y, bool validate = true) = 0;
 	 	virtual void set_ramp(int hi_lo_ind, int left_right_ind);
 		int set_value(int idx, DOMType val);
-		int set_value(int idx, double val);
+		int set_value(int idx, RealType val);
 
 		// misc functions
 

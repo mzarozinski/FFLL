@@ -110,8 +110,8 @@ void MOMDefuzzSetObj::calc()
 
 	FuzzySetBase* set_base = get_parent();
 
-	float idx_mult = set_base->get_idx_multiplier();
-	float min_x = set_base->get_left_x();
+	RealType idx_mult = set_base->get_idx_multiplier();
+	RealType min_x = set_base->get_left_x();
  
 	// this gets a bit complex cuz of the S-Curve where it's possible to have
 	// more than 2 nodes all at the max value.  So we'll make this algorithm
@@ -172,18 +172,19 @@ void MOMDefuzzSetObj::calc()
 	// We also add the starting x value of the output variable to get
 	// it in the correct position relative to the "origin" of the output variable
 
-	set_mean_value(min_x +  ((first_x + (static_cast<float>(last_x - first_x)/2.0f)) * idx_mult ));
+	set_mean_value(min_x +  ((first_x + (static_cast<RealType>(last_x - first_x)/2.0f)) * idx_mult ));
  
 } // end MOMDefuzzSetObj::calc()
+ 
 
 /////////////////////////////////////////////////////////////////////
 ////////// Trivial Functions That Don't Require Headers /////////////
 /////////////////////////////////////////////////////////////////////
-float MOMDefuzzSetObj::get_mean_value() const
+RealType MOMDefuzzSetObj::get_mean_value() const
 {
 	return mean_value;
 };
-void MOMDefuzzSetObj::set_mean_value( float val)
+void MOMDefuzzSetObj::set_mean_value( RealType val)
 {  
 	mean_value= val;
 };

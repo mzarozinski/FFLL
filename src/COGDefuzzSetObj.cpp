@@ -12,7 +12,7 @@
 // include files
 #include "COGDefuzzSetObj.h"
 #include "FuzzyOutSet.h"
-#include "FuzzyVariableBase.h"
+#include "FuzzyOutVariable.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -149,16 +149,16 @@ void COGDefuzzSetObj::calc()
 	int	y;					// holds 'y' value for the curve (refered to as DOM
 							// everywhere else but that gets confising here cuz
 							// we're looping through the doms
-	float area_sum;			// area sum 
-	float area;				// area 
-	float moment_sum;		// sum of the moments
+	RealType area_sum;		// area sum 
+	RealType area;			// area 
+	RealType moment_sum;	// sum of the moments
 
 	// get the min val and idx_multiplier for the var...
 
 	FuzzyOutSet* set_base = get_parent();
 
-	float idx_mult = set_base->get_idx_multiplier();
-	float min_x = set_base->get_left_x();
+	RealType idx_mult = set_base->get_idx_multiplier();
+	RealType min_x = set_base->get_left_x();
  
 	start_idx = set_base->get_start_x();
 	end_idx = set_base->get_end_x();
@@ -214,7 +214,7 @@ void COGDefuzzSetObj::calc()
  			area_sum += area;
 
 			// add the moment to the accumulator
-			moment_sum += (float)x_idx * area;
+			moment_sum += (RealType)x_idx * area;
 
 			} // end loop through curve
 
@@ -234,23 +234,72 @@ void COGDefuzzSetObj::calc()
 
 } // end COGDefuzzSetObj::calc()
 
+//
+// Function:	get_defuzz_x()
+// 
+// Purpose:		This fuction gets the defuzzified 'x' value for a DOM passed in.
+//
+// Arguments:
+//
+//		int		dom - 'y' value to get the 'x' value for  
+//
+// Returns:
+//
+//		RealType - the defuzzified 'x' value for the set
+//
+// Author:	Michael Zarozinski
+// Date:	12/01
+// 
+// Modification History
+// Author	Date		Modification
+// ------	----		------------
+//
+//	
+RealType COGDefuzzSetObj::get_defuzz_x(int dom )
+{
+  
+	if (dom < 0)
+		{
+		return FLT_MIN;
+		}
+
+	RealType area = get_area(dom); 
+
+	if (!area)
+		{
+		return FLT_MIN;
+		}
+
+	RealType  moment =  get_moment(dom);  
+
+	FuzzyOutSet* set_base = get_parent();
+ 	FuzzyOutVariable* parent = set_base->get_parent();
+
+	RealType left_x = parent->get_left_x();
+
+	// be sure to account for the left x (start of the var)
+	return (left_x + (moment / area));
+
+
+} // end COGDefuzzSetObj::get_defuzz_x()
+
 /////////////////////////////////////////////////////////////////////
 ////////// Trivial Functions That Don't Require Headers /////////////
 /////////////////////////////////////////////////////////////////////  
 
-float COGDefuzzSetObj::get_area(int _idx) const
+RealType COGDefuzzSetObj::get_area(int _idx) const
 {
 	return values[_idx].area;
 };
-float COGDefuzzSetObj::get_moment(int _idx) const
+RealType COGDefuzzSetObj::get_moment(int _idx) const
 {
 	return values[_idx].moment;
 };
-void COGDefuzzSetObj::set_area(int _idx, float val)
+void COGDefuzzSetObj::set_area(int _idx, RealType val)
 {  
 	values[_idx].area = val;
 };
-void COGDefuzzSetObj::set_moment(int _idx, float val)
+void COGDefuzzSetObj::set_moment(int _idx, RealType val)
 {  
 	values[_idx].moment = val;
 };

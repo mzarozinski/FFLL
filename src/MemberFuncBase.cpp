@@ -293,7 +293,7 @@ void MemberFuncBase::save_to_fcl_file(std::ofstream& file_contents)
 	for (int i = 0; i < get_node_count(); i++)
 		{
 		// convert the index in the values array to an 'x' value
- 		float fvalue = get_parent()->convert_idx_to_value(get_node_x(i));
+ 		RealType fvalue = get_parent()->convert_idx_to_value(get_node_x(i));
 
 		// if there is a decimal point for this, display only 2 decimal places,
 		// else don't display any (this just makes the FCL file easier to read)
@@ -303,19 +303,19 @@ void MemberFuncBase::save_to_fcl_file(std::ofstream& file_contents)
 			precision = 2;
 
  		// trim 'x' value to the specified precision
-		sprintf( val, "%.*f", precision, fvalue );
+		sprintf( val, "%.*lf", precision, fvalue );
  
  		file_contents << "(" <<  val << ", ";
  
 		// convert to 'y' coordinates
-		fvalue = static_cast<float>(get_node_y(i)) / static_cast<float>(FuzzyVariableBase::get_dom_array_max_idx());
+		fvalue = static_cast<RealType>(get_node_y(i)) / static_cast<RealType>(FuzzyVariableBase::get_dom_array_max_idx());
 
 		if (fmod(fvalue, 1) == 0)
 			precision = 0;
 		else
 			precision = 2;
 
-		sprintf( val, "%.*f", precision, fvalue );
+		sprintf( val, "%.*lf", precision, fvalue );
 		
 		file_contents << val << ") ";
 
@@ -425,7 +425,13 @@ DOMType MemberFuncBase::get_dom(int idx)
 	assert(idx >= 0);
 	assert(idx < FuzzyVariableBase::get_x_array_count());
  
- 	return values[idx];
+	// make sure index is within range
+	if (idx < 0)
+		idx = 0;
+	if (idx > FuzzyVariableBase::get_x_array_max_idx())
+		idx = FuzzyVariableBase::get_x_array_max_idx();
+	
+	return values[idx];
 
 };
 
@@ -434,7 +440,7 @@ int MemberFuncBase::get_end_x(void) const
 	return(nodes[get_node_count() - 1].x);
 }  
   
-float  MemberFuncBase::get_left_x() const 
+RealType  MemberFuncBase::get_left_x() const 
 {
 	return get_parent()->get_left_x();
 };
@@ -443,7 +449,13 @@ DOMType MemberFuncBase::get_value(int idx) const
 { 
 	assert(idx >= 0);
 	assert(idx < FuzzyVariableBase::get_x_array_count());
-	
+		
+	// make sure index is within range
+	if (idx < 0)
+		idx = 0;
+	if (idx > FuzzyVariableBase::get_x_array_max_idx())
+		idx = FuzzyVariableBase::get_x_array_max_idx();
+
 	return values[idx]; 
 };
 
@@ -454,12 +466,18 @@ int MemberFuncBase::set_value(int idx, DOMType val)
 	assert(idx >= 0);
 	assert(idx < FuzzyVariableBase::get_x_array_count());
 
+	// make sure index is within range
+	if (idx < 0)
+		idx = 0;
+	if (idx > FuzzyVariableBase::get_x_array_max_idx())
+		idx = FuzzyVariableBase::get_x_array_max_idx();
+
 	values[idx] = val;
  
 	return 0;
 };
  
-int MemberFuncBase::set_value(int idx, double val) 
+int MemberFuncBase::set_value(int idx, RealType val) 
 {
 	// this version takes a value from 0 to 1 and maps it to a value between 0 and DOM max
 
@@ -469,13 +487,24 @@ int MemberFuncBase::set_value(int idx, double val)
 	assert(val >= 0.0f);
 	assert(val <= 1.0f);
 
-	DOMType y = (static_cast<double>(FuzzyVariableBase::get_dom_array_max_idx()) * val) + 0.5; // add .5 to account for rounding
+	DOMType y = (static_cast<RealType>(FuzzyVariableBase::get_dom_array_max_idx()) * val) + 0.5; // add .5 to account for rounding
 
 	assert(y >= 0);
 	assert(y <= FuzzyVariableBase::get_dom_array_max_idx());
 
+	if (y < 0)
+		y = 0;
+	if (y > FuzzyVariableBase::get_dom_array_max_idx())
+		y = FuzzyVariableBase::get_dom_array_max_idx();
+
 	assert(idx >= 0);
 	assert(idx < FuzzyVariableBase::get_x_array_count());
+
+	// make sure index is within range
+	if (idx < 0)
+		idx = 0;
+	if (idx > FuzzyVariableBase::get_x_array_max_idx())
+		idx = FuzzyVariableBase::get_x_array_max_idx();
 
 	values[idx] = y;
  

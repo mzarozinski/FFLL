@@ -39,15 +39,15 @@ class FFLL_API FuzzyVariableBase :  virtual public FFLLBase
 		FuzzyVariableBase(FuzzyModelBase* _parent);
 		FuzzyVariableBase(); // No function body for this. Explicitly disallow auto-creation of it by the compiler
 		virtual ~FuzzyVariableBase();
-		virtual int init(const wchar_t* _id, float _left_x, float _right_x, bool create_unique_id = true);
+		virtual int init(const wchar_t* _id, RealType _left_x, RealType _right_x, bool create_unique_id = true);
 		virtual int init(const wchar_t* _id, bool create_unique_id = true);
 
 		// set functions
 		static int set_x_array_count(int _count);
 		static int set_dom_array_count(int _count);
 		void set_rule_index(int _rule_index, int set_idx = -1);
-		virtual int set_left_x(float value);
-		virtual int set_right_x(float value);
+		virtual int set_left_x(RealType value);
+		virtual int set_right_x(RealType value);
 		virtual int set_id(const char* _id, int set_idx = -1);
 		virtual void set_ramp(int left_right_ind, int hi_lo_ind, int set_idx  );
 		int set_id(const wchar_t* _id, int set_idx = -1);
@@ -58,9 +58,9 @@ class FFLL_API FuzzyVariableBase :  virtual public FFLLBase
 		static ValuesArrCountType get_x_array_max_idx();
 		static DOMType get_dom_array_count();
 		static DOMType get_dom_array_max_idx();
- 		float get_left_x() const ;
-		float get_right_x() const ;
-		float get_idx_multiplier() const;
+ 		RealType get_left_x() const ;
+		RealType get_right_x() const ;
+		RealType get_idx_multiplier() const;
 		virtual DOMType get_dom(int set_idx, int x_position = -1) const ;
  		std::string get_model_name() const;
 		int get_rule_index(int _set_idx = -1) const ;
@@ -82,8 +82,8 @@ class FFLL_API FuzzyVariableBase :  virtual public FFLLBase
 		int load_sets_from_fcl_file(std::ifstream& file_contents);
 
 		// misc functions
-		float convert_idx_to_value(int idx) const;
-		ValuesArrCountType convert_value_to_idx(float value) const;
+		virtual RealType convert_idx_to_value(int idx) const;
+		ValuesArrCountType convert_value_to_idx(RealType value) const;
 		void calc_idx_multiplier(); // NOTE: there is not 'set' for the multiplier - it's always calculated
  		virtual bool is_output(void) const;
   		bool is_set_id_unique(const wchar_t* set_id, int set_idx) const;
@@ -112,9 +112,9 @@ class FFLL_API FuzzyVariableBase :  virtual public FFLLBase
 		short			index;					// index for this variable in the model
  
 		std::wstring	id ;					// idendifier for the set wich is unique for the variable its part of.  
-		float			left_x;					// minimum value on the 'x' axis
-		float			right_x;				// maximum value on the 'x' axis
-		float			idx_multiplier;			// pre-calculated value of (FuzzyVariableBase::x_array_count/(max_value - min_value). This
+		RealType		left_x;					// minimum value on the 'x' axis
+		RealType		right_x;				// maximum value on the 'x' axis
+		RealType		idx_multiplier;			// pre-calculated value of (FuzzyVariableBase::x_array_count/(max_value - min_value). This
 												// is how many 'x' values are in each element in the values[] array (part of the MemberFuncBase 
 												// object).
 		int				rule_index;				// this is the starting offset into memory for this variable.

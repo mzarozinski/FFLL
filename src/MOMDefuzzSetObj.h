@@ -36,11 +36,11 @@ class   MOMDefuzzSetObj : public DefuzzSetObj
  		virtual ~MOMDefuzzSetObj(); 
 
  		// get functions
-		float get_mean_value() const;
+		RealType get_mean_value() const;
  		int get_defuzz_type() const;
 
 		// set functions
-		void set_mean_value(float mean);
+		void set_mean_value(RealType mean);
  
 		// misc functions
  		void calc(void);
@@ -51,7 +51,7 @@ class   MOMDefuzzSetObj : public DefuzzSetObj
 	
 	private:
 
-  		float mean_value;	// 'x' value for the mean
+  		RealType mean_value;	// 'x' value for the mean
 
 }; // end class MOMDefuzzSetObj
  

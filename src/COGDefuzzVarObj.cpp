@@ -88,7 +88,7 @@ COGDefuzzVarObj::~COGDefuzzVarObj()
 //
 // Returns:
 //
-//		float - the defuzzified output value. FLT_MIN is returned if no output sets are active
+//		RealType - the defuzzified output value. FLT_MIN is returned if no output sets are active
 //
 // Author:	Michael Zarozinski
 // Date:	8/01
@@ -98,12 +98,12 @@ COGDefuzzVarObj::~COGDefuzzVarObj()
 // ------	----		------------
 //
 //
-float COGDefuzzVarObj::calc_value(DOMType* out_set_dom_arr  )
+RealType COGDefuzzVarObj::calc_value(DOMType* out_set_dom_arr  )
 {
-	float area_sum = 0.0;		// sum of the area
-	float moment_sum = 0.0;		// sum of the moments
-	float divisor = 0.0;		// value to divide cog_sum by
-	float tmp_area = 0.0;		// tmp var  
+	RealType area_sum = 0.0;		// sum of the area
+	RealType moment_sum = 0.0;		// sum of the moments
+	RealType divisor = 0.0;		// value to divide cog_sum by
+	RealType tmp_area = 0.0;		// tmp var  
 	COGDefuzzSetObj*	defuzz;	// defuzzification object for the set
  	int	 cog_idx;				// center of gravity index
  
@@ -155,7 +155,7 @@ float COGDefuzzVarObj::calc_value(DOMType* out_set_dom_arr  )
 
 		} // end if no divisor
 
-	float left_x = parent->get_left_x();
+	RealType left_x = parent->get_left_x();
 
 	// be sure to account for the left x (start of the var)
 	return (left_x + (moment_sum / area_sum));

@@ -18,6 +18,7 @@
 
 #include <fstream>
 #include <time.h>
+#include <math.h>
 
 #ifdef _DEBUG  
 #undef THIS_FILE
@@ -158,8 +159,8 @@ void FuzzyModelBase::delete_vars()
 //													in which case it'll be named "Variable X" AND the name passed
 //													in may not be the final name because variable names MUST be
 //													unique within the model
-//			float			start_x				-	Starting (left most) 'x' value for the variable
-//			float			end_x				-	Ending (right most) 'x' value for the variable
+//			RealType		start_x				-	Starting (left most) 'x' value for the variable
+//			RealType		end_x				-	Ending (right most) 'x' value for the variable
 //			bool			create_unique_id	-	if true, alter the identifier (if needed) to make it unique) default = true
 //
 // Returns:
@@ -175,7 +176,7 @@ void FuzzyModelBase::delete_vars()
 // ------	----		------------
 //
 //
-int FuzzyModelBase::add_input_variable(const wchar_t* _name, float start_x, float end_x, bool create_unique_id /* = true */)
+int FuzzyModelBase::add_input_variable(const wchar_t* _name, RealType start_x, RealType end_x, bool create_unique_id /* = true */)
 { 
  	FuzzyVariableBase*	var = new_variable();
    
@@ -203,8 +204,8 @@ int FuzzyModelBase::add_input_variable(const wchar_t* _name, float start_x, floa
 //													in which case it'll be named "Variable X" AND the name passed
 //													in may not be the final name because variable names MUST be
 //													unique within the model
-//			float			start_x				-	Starting (left most) 'x' value for the variable
-//			float			end_x				-	Ending (right most) 'x' value for the variable
+//			RealType		start_x				-	Starting (left most) 'x' value for the variable
+//			RealType		end_x				-	Ending (right most) 'x' value for the variable
 //			bool			create_unique_id	-	if true, alter the identifier (if needed) to make it unique) default = true
 //
 // Returns:
@@ -220,7 +221,7 @@ int FuzzyModelBase::add_input_variable(const wchar_t* _name, float start_x, floa
 // ------	----		------------
 //
 //
-int FuzzyModelBase::add_output_variable(const wchar_t* _name, float start_x, float end_x, bool create_unique_id /* = true */)
+int FuzzyModelBase::add_output_variable(const wchar_t* _name, RealType start_x, RealType end_x, bool create_unique_id /* = true */)
 {
 	// return error if we already have an output variable
 	if (output_var)
@@ -860,7 +861,7 @@ const char* FuzzyModelBase::get_msg_textA()
 //
 // Returns:
 //
-//		float - the output value, FLT_MIN if no ouput set is active
+//		RealType - the output value, FLT_MIN if no ouput set is active
 //
 // Author:	Michael Zarozinski
 // Date:	
@@ -870,7 +871,7 @@ const char* FuzzyModelBase::get_msg_textA()
 // ------	----		------------
 //
 //
-float FuzzyModelBase::calc_output(short* var_idx_arr, DOMType* out_set_dom_arr )  
+RealType FuzzyModelBase::calc_output(short* var_idx_arr, DOMType* out_set_dom_arr )  
 {
 	calc_active_output_level_wrapper(var_idx_arr, out_set_dom_arr);
  
@@ -1605,7 +1606,7 @@ int FuzzyModelBase::load_vars_from_fcl_file(std::ifstream& file_contents, bool o
 
  	char line[300];
 	char var_name[50];
-	float start_val, end_val;	// range for the variable
+	RealType start_val, end_val;	// range for the variable
 
 	// get line-by-line until we reach END_VAR
 	file_contents.getline(line, 300);
@@ -1627,7 +1628,8 @@ int FuzzyModelBase::load_vars_from_fcl_file(std::ifstream& file_contents, bool o
 			char* pos = strstr(line, "RANGE(");
 
 			char* num_start;
-			char*  num_end;
+			char* num_end;
+			char* stop_scan; // used for strtod
 
 			if (pos != NULL)
 				{
@@ -1649,7 +1651,14 @@ int FuzzyModelBase::load_vars_from_fcl_file(std::ifstream& file_contents, bool o
 
 				strncpy(value, num_start, num_len);
 
-				start_val = atof(value);
+				start_val = strtod(value, &stop_scan);
+
+				if (fabs(start_val) == HUGE_VAL)
+					{
+					// error converting...
+					set_msg_text(ERR_VAR_MIN_VALUE);
+ 					return -1; 
+					}
 
 				pos += strlen(".."); // puts us at the start of the next number
 
@@ -1664,7 +1673,14 @@ int FuzzyModelBase::load_vars_from_fcl_file(std::ifstream& file_contents, bool o
 
 				strncpy(value, num_start, num_len);
 
-				end_val = atof(value);
+				end_val = strtod(value, &stop_scan);
+
+				if (fabs(end_val) == HUGE_VAL)
+					{
+					// error converting...
+					set_msg_text(ERR_VAR_MAX_VALUE);
+ 					return -1; 
+					}
 
 				} // end found token RANGE
 
@@ -2228,6 +2244,9 @@ void FuzzyModelBase::remove_rule(int index)
 
 void FuzzyModelBase::init()
 {
+	if (rules)
+		delete rules;
+
 	rules =  new_rule_array();
 };
 
@@ -2290,7 +2309,7 @@ FuzzyOutVariable* FuzzyModelBase::new_output_variable()
 	return new FuzzyOutVariable(this);
 }  
 
-ValuesArrCountType FuzzyModelBase::convert_value_to_idx(int var_idx, float value) const
+ValuesArrCountType FuzzyModelBase::convert_value_to_idx(int var_idx, RealType value) const
 {
 
 	FuzzyVariableBase* var =  get_var(var_idx);

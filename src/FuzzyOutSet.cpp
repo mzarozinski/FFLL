@@ -193,6 +193,65 @@ void FuzzyOutSet::calc()
 
 }; // end FuzzyOutSet::calc()
 
+//
+// Function:	get_defuzz_x()
+// 
+// Purpose:		This fuction gets the defuzzified 'x' value for a DOM passed in.
+//				it's a generic function so the caller does not need to know the
+//				defuzzification method used.
+//
+// Arguments:
+//
+//		int		dom - 'y' value to get the 'x' value for (default: -1)
+//
+// Returns:
+//
+//		RealType - the defuzzified 'x' value for the set, FLT_MIN if something went wrong
+//
+// Author:	Michael Zarozinski
+// Date:	12/01
+// 
+// Modification History
+// Author	Date		Modification
+// ------	----		------------
+//
+//		
+RealType FuzzyOutSet::get_defuzz_x(int dom /* = -1 */)
+{
+ 
+	// get the defuzzification method...
+
+	FuzzyOutVariable* parent = get_parent();
+
+	DefuzzSetObj* defuzz_base = get_defuzz_obj();
+
+	int defuzz_type = defuzz_base->get_defuzz_type();
+
+	if (defuzz_type == DefuzzVarObj::DEFUZZ_TYPE::COG && dom < 0)
+		return FLT_MIN; // invalid dom
+
+	if (defuzz_type == DefuzzVarObj::DEFUZZ_TYPE::COG)
+		{
+		COGDefuzzSetObj* cog_defuzz = dynamic_cast<COGDefuzzSetObj*>(defuzz_base);
+		
+		return cog_defuzz->get_defuzz_x(dom); 
+ 
+		} // end if CoG
+
+	if (defuzz_type == DefuzzVarObj::DEFUZZ_TYPE::MOM)
+		{
+		MOMDefuzzSetObj* mom_defuzz = dynamic_cast<MOMDefuzzSetObj*>(defuzz_base);
+
+		return mom_defuzz->get_mean_value(); 
+
+		} // end if MoM
+
+	// should never get her, but just in case...
+	return FLT_MIN;  
+
+}; // end FuzzyOutSet::get_defuzz_x()
+		
+ 
 
 /////////////////////////////////////////////////////////////////////
 ////////// Trivial Functions That Don't Require Headers /////////////
@@ -201,4 +260,9 @@ void FuzzyOutSet::calc()
 DefuzzSetObj* FuzzyOutSet::get_defuzz_obj() const
 { 
 	return defuzz_obj; 
+};
+	
+FuzzyOutVariable* FuzzyOutSet::get_parent() const
+{
+	return dynamic_cast<FuzzyOutVariable*>(FuzzySetBase::get_parent());
 };

@@ -36,14 +36,15 @@ class   COGDefuzzSetObj : public DefuzzSetObj
 		virtual ~COGDefuzzSetObj(); 
 		int init(int array_max);
 
-		// get functins
+		// get functions
 		int get_defuzz_type() const;
- 		float get_area(int _idx) const;
-		float get_moment(int _idx) const;
- 
+ 		RealType get_area(int _idx) const;
+		RealType get_moment(int _idx) const;
+		RealType get_defuzz_x(int dom);
+
 		// set functions
- 		void set_area(int _idx, float val);
-		void set_moment(int _idx, float val);
+ 		void set_area(int _idx, RealType val);
+		void set_moment(int _idx, RealType val);
  
 		// misc functions
 		void calc(void);
@@ -61,8 +62,8 @@ class   COGDefuzzSetObj : public DefuzzSetObj
 
 		typedef struct _cog_struct_
 			{
- 			float			area;	// area for this COG
-			float			moment;	// area * cog
+ 			RealType			area;	// area for this COG
+			RealType			moment;	// area * cog
 			} _cog_struct;
 
 	protected:

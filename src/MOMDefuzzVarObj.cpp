@@ -86,7 +86,7 @@ MOMDefuzzVarObj::~MOMDefuzzVarObj()
 //
 // Returns:
 //
-//		float - the defuzzified output value. FLT_MIN is returned if no output sets are active
+//		RealType - the defuzzified output value. FLT_MIN is returned if no output sets are active
 //
 // Author:	Michael Zarozinski
 // Date:	8/01
@@ -96,7 +96,7 @@ MOMDefuzzVarObj::~MOMDefuzzVarObj()
 // ------	----		------------
 //
 //
-float MOMDefuzzVarObj::calc_value(DOMType* out_set_dom_arr  )
+RealType MOMDefuzzVarObj::calc_value(DOMType* out_set_dom_arr  )
 {
 	FuzzyOutVariable*	parent;		// pointer to parent
 	int					num_of_sets;// number of sets

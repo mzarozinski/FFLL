@@ -48,7 +48,9 @@
 #define ERR_INVALID_COMP_MTHD		ERROR_BASE + 11
 #define ERR_INVALID_INFERENCE_MTHD	ERROR_BASE + 12
 #define ERR_OPENING_FILE			ERROR_BASE + 13
- 
+#define ERR_VAR_MIN_VALUE			ERROR_BASE + 14
+#define ERR_VAR_MAX_VALUE			ERROR_BASE + 15
+
 
 #define WARNING_BASE		4000
 
@@ -101,6 +103,10 @@ const int OUTPUT_IDX = -1; // constant for output variable
 // we could shrink the memory footprint in 1/2 if we used bytes to store the info.  This would limit
 // us to 16 output sets... probably a reasonable amount but may be to limited.
 typedef unsigned char  RuleArrayType;
+
+// using float for the variable's left/right values can cause a loss of precision so we'll typedef
+// a datatype...
+typedef double RealType;
  
 const RuleArrayType NO_RULE = 255;	// 255 is the MAX that an unsigned char can hold - so this means we're
 									// limited to 255 set in the output variable... a limitation I believe

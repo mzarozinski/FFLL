@@ -227,7 +227,7 @@ int FuzzyOutVariable::set_composition_method(int method)
 //
 // Returns:
 //
-//		float - the defuzzifed value. FLT_MIN is returned if no output sets are active
+//		RealType - the defuzzifed value. FLT_MIN is returned if no output sets are active
 //
 // Author:	Michael Zarozinski
 // Date:	7/00
@@ -237,11 +237,11 @@ int FuzzyOutVariable::set_composition_method(int method)
 // ------	----		------------
 //
 //
-float FuzzyOutVariable::calc_output_value(DOMType* out_set_dom_arr ) const
+RealType FuzzyOutVariable::calc_output_value(DOMType* out_set_dom_arr ) const
 {
  	assert(defuzz_obj);
 
-	float out_value = defuzz_obj->calc_value(out_set_dom_arr);
+	RealType out_value = defuzz_obj->calc_value(out_set_dom_arr);
 
 	// Note:  if we don't have an output value FLT_MIN is returned from above func call
 	return out_value;
@@ -331,6 +331,41 @@ int FuzzyOutVariable::init(const wchar_t* _id, bool create_unique_id /* = true *
 } // end FuzzyOutVariable::init()
 
 
+//
+// Function: convert_idx_to_value()
+// 
+// Purpose:	This function converts an index (into the values[] array) to 
+//			an 'x' value between left_x and right_x for this variable
+//			NOTE: this is the OUTPUT var version. -1 is a valid "current_x_value"
+//			value for it (if no output sets are active) so we handle it special.
+// 
+// Arguments:
+//
+//		int idx -	index to convert to a value
+//
+// Returns:
+//
+//		RealType - x value for the index passed in
+// 
+// Author:	Michael Zarozinski	
+// Date:	11/28/01
+// 
+// Modification History
+// Author		Date		Modification
+// ------		----		------------
+//
+//
+
+RealType FuzzyOutVariable::convert_idx_to_value(int idx) const
+{
+	assert(idx >= -1);
+
+	if (idx == -1)
+ 		return FLT_MIN;
+ 	else
+		return FuzzyVariableBase::convert_idx_to_value(idx);
+
+};
 
 /////////////////////////////////////////////////////////////////////
 ////////// Trivial Functions That Don't Require Headers /////////////
@@ -370,7 +405,7 @@ const char* FuzzyOutVariable::get_fcl_block_end()
 	return "END_VAR"; 
 };
 
-int FuzzyOutVariable::init(const wchar_t* _id, float _left_x, float _right_x, bool create_unique_id /* = true */)
+int FuzzyOutVariable::init(const wchar_t* _id, RealType _left_x, RealType _right_x, bool create_unique_id /* = true */)
 {
 	// call ancestore
 	return FuzzyVariableBase::init(_id, _left_x, _right_x, create_unique_id);

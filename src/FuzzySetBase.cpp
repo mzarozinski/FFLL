@@ -453,11 +453,11 @@ bool FuzzySetBase::is_output() const
 	return get_parent()->is_output();
 }
   
-float  FuzzySetBase::get_left_x() const
+RealType  FuzzySetBase::get_left_x() const
 {
 	return get_parent()->get_left_x();
 };
-float FuzzySetBase::get_idx_multiplier() const
+RealType FuzzySetBase::get_idx_multiplier() const
 {
 	return get_parent()->get_idx_multiplier();
 };
@@ -552,7 +552,7 @@ FuzzySetBase& FuzzySetBase::operator=(const FuzzySetBase& copy_from)
 	return *this;
 };
 
-float FuzzySetBase::convert_idx_to_value(int idx) const
+RealType FuzzySetBase::convert_idx_to_value(int idx) const
 {
 	assert(idx >= 0);
 	assert(idx <= FuzzyVariableBase::get_x_array_count());

@@ -39,7 +39,7 @@ class DefuzzVarObj : virtual public FFLLBase
 		virtual int get_defuzz_type() const = 0;	
 
 		// misc functions
- 		virtual	float calc_value(DOMType* out_set_dom_arr ) = 0;
+ 		virtual	RealType calc_value(DOMType* out_set_dom_arr ) = 0;
 
 	protected:
 

@@ -37,7 +37,7 @@ class  FFLL_API FuzzyOutVariable : virtual public FuzzyVariableBase
  		FuzzyOutVariable(); // No function body for this. Explicitly disallow auto-creation of it by the compiler
 		FuzzyOutVariable(FuzzyModelBase* _parent);
 		virtual ~FuzzyOutVariable();
-		virtual int init(const wchar_t* _id, float _left_x, float _right_x, bool create_unique_id = true);
+		virtual int init(const wchar_t* _id, RealType _left_x, RealType _right_x, bool create_unique_id = true);
 		virtual int init(const wchar_t* _id, bool create_unique_id = true);
 
 		// get functions
@@ -54,7 +54,8 @@ class  FFLL_API FuzzyOutVariable : virtual public FuzzyVariableBase
 		// misc functions
 		FuzzySetBase* new_set();
 		virtual bool is_output() const;
-		virtual float calc_output_value(DOMType* out_set_dom_arr ) const;  
+		virtual RealType calc_output_value(DOMType* out_set_dom_arr ) const;  
+		virtual RealType convert_idx_to_value(int idx) const;
 
 	////////////////////////////////////////
 	////////// Class Variables /////////////

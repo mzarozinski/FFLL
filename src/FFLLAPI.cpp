@@ -182,10 +182,10 @@ int __stdcall ffll_new_child(int model_idx)
 //
 // Arguments:	
 //
-//		int		model_idx	- index of the model 
-//		int		child_idx	- index of the child
-//		int		var_idx		- index of the variable
-//		float	value		- value to set the variable to
+//		int			model_idx	- index of the model 
+//		int			child_idx	- index of the child
+//		int			var_idx		- index of the variable
+//		RealType	value		- value to set the variable to
 //
 // Returns:
 //
@@ -200,7 +200,7 @@ int __stdcall ffll_new_child(int model_idx)
 // ------	----		------------
 //
 //  
-int __stdcall ffll_set_value(int model_idx, int child_idx, int var_idx, float value)
+int __stdcall ffll_set_value(int model_idx, int child_idx, int var_idx, double value)
 {
 	ModelContainer* container = get_model(model_idx);
 
@@ -240,7 +240,7 @@ int __stdcall ffll_set_value(int model_idx, int child_idx, int var_idx, float va
 //
 // 
  
-float __stdcall ffll_get_output_value(int model_idx, int child_idx)
+double __stdcall ffll_get_output_value(int model_idx, int child_idx)
 {
 	ModelContainer* container = get_model(model_idx);
 
@@ -249,7 +249,7 @@ float __stdcall ffll_get_output_value(int model_idx, int child_idx)
 
 	// pass in the input value for each input variable and the array
 	// of DOMs for the output sets
-	float out_val = container->model->calc_output(child->var_idx_arr, child->out_set_dom_arr); 
+	RealType out_val = container->model->calc_output(child->var_idx_arr, child->out_set_dom_arr); 
 
 	return out_val;
  

@@ -217,7 +217,7 @@ bool FuzzyVariableBase::is_set_id_unique(const wchar_t* set_id, int set_idx) con
 //
 // Arguments:
 //
-//		float value - value to set left_x to
+//		RealType value - value to set left_x to
 //
 // Returns:
 //
@@ -233,7 +233,7 @@ bool FuzzyVariableBase::is_set_id_unique(const wchar_t* set_id, int set_idx) con
 //
 //
  
-int FuzzyVariableBase::set_left_x(float value)
+int FuzzyVariableBase::set_left_x(RealType value)
 {
  
 	// make sure value != right_x
@@ -261,7 +261,7 @@ int FuzzyVariableBase::set_left_x(float value)
 //
 // Arguments:
 //
-//		float value - value to set right_x to
+//		RealType value - value to set right_x to
 //
 // Returns:
 //
@@ -276,7 +276,7 @@ int FuzzyVariableBase::set_left_x(float value)
 // ------	----		------------
 //
 //
-int FuzzyVariableBase::set_right_x(float value)
+int FuzzyVariableBase::set_right_x(RealType value)
 {
 	// make sure avlue != left_x
 	if (value == left_x)
@@ -319,7 +319,7 @@ int FuzzyVariableBase::set_right_x(float value)
 // 
 void FuzzyVariableBase::calc_idx_multiplier()
 { 
- 	idx_multiplier =(right_x - left_x) /((float)( FuzzyVariableBase::x_array_max_idx));
+ 	idx_multiplier =(right_x - left_x) /((RealType)( FuzzyVariableBase::x_array_max_idx));
 	
 }; // end FuzzyVariableBase::calc_idx_multiplier()
  
@@ -469,7 +469,7 @@ void FuzzyVariableBase::delete_all_sets()
 //
 int FuzzyVariableBase::set_id(const char* _id, int set_idx /* = -1 */)
 {
-	wchar_t* wc = new wchar_t[strlen(_id)];
+	wchar_t* wc = new wchar_t[strlen(_id) + 1];
 
 	// convert from char to wchar_t
 	swprintf(wc, L"%S", _id);
@@ -513,7 +513,14 @@ int FuzzyVariableBase::set_id(const wchar_t* _id, int set_idx /* = -1 */)
 	// if a set_idx is passed in, set the name for that set
 	if (set_idx >= 0)
 		{
-		return sets[set_idx]->set_id(_id);
+		int ret_val = sets[set_idx]->set_id(_id);
+
+		if (ret_val)
+			{
+			// read the error from the set and set it for 'this'
+			set_msg_text(sets[set_idx]->get_msg_text());
+ 			return ret_val;  
+			}
 		}
 
  	if (_id == NULL || wcslen(_id) == 0)
@@ -902,7 +909,7 @@ int FuzzyVariableBase::load_sets_from_fcl_file(std::ifstream& file_contents)
 	// read line-by-line to get the sets...
 
 	char line[300];
- 	float x_point[7], y_point[7];	// x/y points for the set - NOTE: we assume a max of 7 points
+ 	RealType x_point[7], y_point[7];	// x/y points for the set - NOTE: we assume a max of 7 points
 
 	char* set_name;
 	char* token;
@@ -1105,7 +1112,7 @@ void FuzzyVariableBase::calc(int set_idx /* = -1 */)
 //
 // Returns:
 //
-//		float - x value for the index passed in
+//		RealType - x value for the index passed in
 // 
 // Author:	Michael Zarozinski	
 // Date:	1/99
@@ -1113,13 +1120,20 @@ void FuzzyVariableBase::calc(int set_idx /* = -1 */)
 // Modification History
 // Author		Date		Modification
 // ------		----		------------
+// Michael Z	10/23/01	Added sanity checks
 //
 //
 
-float FuzzyVariableBase::convert_idx_to_value(int idx) const
+RealType FuzzyVariableBase::convert_idx_to_value(int idx) const
 {
 	assert(idx >= 0);
 	assert(idx <= FuzzyVariableBase::get_x_array_count());
+
+	// make sure index is within range
+	if (idx < 0)
+		idx = 0;
+	if (idx > FuzzyVariableBase::get_x_array_max_idx())
+		idx = FuzzyVariableBase::get_x_array_max_idx();
 
 	return left_x + (idx * get_idx_multiplier());
 };
@@ -1132,7 +1146,7 @@ float FuzzyVariableBase::convert_idx_to_value(int idx) const
 // 
 // Arguments:
 //
-//		float - x value to convert
+//		RealType - x value to convert
 //
 // Returns:
 //
@@ -1144,13 +1158,22 @@ float FuzzyVariableBase::convert_idx_to_value(int idx) const
 // Modification History
 // Author		Date		Modification
 // ------		----		------------
+// Michael Z	10/23/01	Added sanity checks
 //
 //
 
-ValuesArrCountType FuzzyVariableBase::convert_value_to_idx(float value) const
+ValuesArrCountType FuzzyVariableBase::convert_value_to_idx(RealType value) const
 {
-	// add .5 so any floats get rounded correctly when converting to int
-	return ((value -  get_left_x()) / get_idx_multiplier()) + .5;
+	// add .5 so any floating point values get rounded correctly when converting to int
+	int idx = ((value -  get_left_x()) / get_idx_multiplier()) + .5;
+
+	// make sure index is within range
+	if (idx < 0)
+		idx = 0;
+	if (idx > FuzzyVariableBase::get_x_array_max_idx())
+		idx = FuzzyVariableBase::get_x_array_max_idx();
+
+	return idx;
 };
 
 
@@ -1162,8 +1185,8 @@ ValuesArrCountType FuzzyVariableBase::convert_value_to_idx(float value) const
 // Arguments:
 //
 //		const wchar_t*	_id					-	identifier for the variable
-//		float			_left_x				-	left x value
-//		float			_right_x			-	right x value
+//		RealType		_left_x				-	left x value
+//		RealType		_right_x			-	right x value
 //		bool			create_unique_id	-	if true, alter the identifier (if needed) to make it unique) default = true
 //
 // Returns:
@@ -1180,7 +1203,7 @@ ValuesArrCountType FuzzyVariableBase::convert_value_to_idx(float value) const
 //
 //
 		
-int FuzzyVariableBase::init(const wchar_t* _id, float _left_x, float _right_x, bool create_unique_id /* = true */)
+int FuzzyVariableBase::init(const wchar_t* _id, RealType _left_x, RealType _right_x, bool create_unique_id /* = true */)
 {
 	if (set_left_x(_left_x))
 		return -1;
@@ -1364,7 +1387,7 @@ std::string FuzzyVariableBase::get_model_name() const
  	return get_parent()->get_model_name();
 };
  
-float FuzzyVariableBase::get_idx_multiplier() const
+RealType FuzzyVariableBase::get_idx_multiplier() const
 {
 	return idx_multiplier;
 };
@@ -1391,11 +1414,11 @@ const char* FuzzyVariableBase::get_fcl_block_end()
 	return "END_VAR"; 
 } 
 
-float FuzzyVariableBase::get_left_x() const 
+RealType FuzzyVariableBase::get_left_x() const 
 {	
 	return left_x;
 }
-float FuzzyVariableBase::get_right_x() const 
+RealType FuzzyVariableBase::get_right_x() const 
 {	
 	return right_x;
 } 

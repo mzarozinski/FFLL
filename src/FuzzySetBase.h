@@ -57,8 +57,8 @@ class FFLL_API  FuzzySetBase : virtual  public FFLLBase
  		int get_ramp();
 		int get_node_x(int node_idx) const;
 		int get_rule_index() const;
-		float get_idx_multiplier() const;
-		float  get_left_x() const; 
+		RealType get_idx_multiplier() const;
+		RealType  get_left_x() const; 
 		void set_index(int _idx);
 		DOMType get_value(int idx) const;
 		DOMType get_index() const;
@@ -75,7 +75,7 @@ class FFLL_API  FuzzySetBase : virtual  public FFLLBase
 		// misc funcs
 
 		bool is_output() const ;
-		float FuzzySetBase::convert_idx_to_value(int idx) const;
+		RealType FuzzySetBase::convert_idx_to_value(int idx) const;
 		virtual int new_member_func(int type, int start_x, int width);
  		virtual int new_member_func(int type);
  		void move_node(int anchor_idx, _point pt);

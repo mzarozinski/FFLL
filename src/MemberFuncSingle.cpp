@@ -205,7 +205,7 @@ void MemberFuncSingle::calc()
 //
 void MemberFuncSingle::save_to_fcl_file(std::ofstream& file_contents)
 {
- 	float fvalue = get_parent()->convert_idx_to_value(get_node_x(0));
+ 	RealType fvalue = get_parent()->convert_idx_to_value(get_node_x(0));
 
 	char  val[6];
 	int precision ;	// how many decimal places to show  
@@ -216,7 +216,7 @@ void MemberFuncSingle::save_to_fcl_file(std::ofstream& file_contents)
 		precision = 2;
 
  	// trim 'x' value to the specified precision
-	sprintf( val, "%.*f", precision, fvalue );
+	sprintf( val, "%.*lf", precision, fvalue );
 
  	file_contents << val << ";";
 
