@@ -290,9 +290,9 @@ int FuzzyOutVariable::init(const wchar_t* _id, bool create_unique_id /* = true *
 
 	// if no name is passed in name it "Output"
  	if (_id == NULL)
-		swprintf(tmp_name, L"%s", load_string(STR_OUTPUT));  
- 	else
-		swprintf(tmp_name, L"%s", _id );  
+		swprintf(tmp_name, name_len, L"%ls", load_string(STR_OUTPUT));  
+	else
+		swprintf(tmp_name, name_len, L"%ls", _id );  
  	
  	// set the name.  NOTE: this set_id() performs a check to ensure that the variable name is UNIQUE
 	// for this model.  
@@ -313,9 +313,9 @@ int FuzzyOutVariable::init(const wchar_t* _id, bool create_unique_id /* = true *
 			{
 			// rename variable...
 			if (_id == NULL)
-				swprintf(tmp_name, L"%s %d", load_string(STR_OUTPUT), counter  );  
+				swprintf(tmp_name, name_len, L"%ls %d", load_string(STR_OUTPUT), counter  );  
  			else
-				swprintf(tmp_name, L"%s %d", _id, counter );  
+				swprintf(tmp_name, name_len, L"%ls %d", _id, counter );  
 
 			counter++;
  

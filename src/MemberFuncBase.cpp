@@ -490,6 +490,12 @@ int MemberFuncBase::set_value(int idx, RealType val)
 	assert(val >= 0.0f);
 	assert(val <= 1.0f);
 
+	// set it if it's out of range
+	if (val < 0.0f)
+		val = 0;
+	if (val > 1.0f)
+		val = 1;
+
 	DOMType y = (static_cast<RealType>(FuzzyVariableBase::get_dom_array_max_idx()) * val) + 0.5; // add .5 to account for rounding
 
 	assert(y >= 0);

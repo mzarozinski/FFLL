@@ -1,14 +1,22 @@
 FFLL API Readme
 ---------------
 
-Version: 2.1.2
-Release Date: 08/01/02
+Version: 2.2.0
+Release Date: 04/24/03
 
 
 Release History
 ----------------
 
-August 1, 2001 v2.1.2
+April 24, 2003 v2.2.0
+
+* change to COGDefuzzSetObj.cpp that was causing slightly incorrect output values
+* updates to FFLLAPI.cpp to use std::list instead of std::vector to avoid destructors getting called before they should
+* Added:
+     #define swprintf _snwprintf
+for Windows platforms to be more compatible with non-windows platforms 
+
+August 1, 2002 v2.1.2
 
 This version of the FFLL library has been modified to compile using the GCC compiler.
 The the /GCC subdirectory there is a makefile (makefile.win) that was created from 

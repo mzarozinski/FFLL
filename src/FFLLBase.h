@@ -18,9 +18,10 @@
 #pragma warning(disable:4710) 
 
 
-
 #ifndef _FFLLBASE_H
 #define _FFLLBASE_H
+
+
 
 // define the numbers that identify warning and error messages 
 // each class of message has a base offsets.  We subtract
@@ -79,6 +80,11 @@
 #include <assert.h>
 #include <float.h> // needed for FLT_MIN
 #include <fstream>
+
+// added #define for more compatiblity (Michael Z 4/03)...
+#if defined (__MSVCRT__) || defined(_WINDOWS)
+#define   swprintf   _snwprintf
+#endif
 
 // THIS version must be used by any caller outside this DLL otherwize we get
 // mem deallocation errors (in debug mode)

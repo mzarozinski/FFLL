@@ -16,6 +16,7 @@
 #include "FuzzyOutVariable.h"
 #include "MemberFuncBase.h"
 #include <vector>
+#include <list>
 
 class ModelContainer;	// forward declaration
 
@@ -25,9 +26,6 @@ ModelContainer* get_model(int idx);
 #ifdef _DEBUG
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
-
-#include "debug.h"
-
 #endif
 
 // Declare the classes here, rather than in a .h so everything is in one place
@@ -88,6 +86,7 @@ class ModelChild
 // not change. 
 //
 
+
 class ModelContainer
 {
 	// everything is public cuz these are only used in this file.
@@ -103,18 +102,23 @@ class ModelContainer
 			model->init();
 			};
 
-		ModelContainer(const ModelContainer& copy_from)	
+	     // Copy constructor
+        ModelContainer(const ModelContainer& obj) 
 			{
-			// raise an error if we have a model allocated. We shouldn't
-			// get here after the model was allocated, if we did the destrcutor
-			// is gonna be called and the model is going bye-bye.
-			assert(copy_from.model == NULL);
-			model = copy_from.model;
+			*this = obj; 
 			};
 
+        // Assignment operator
+        ModelContainer& operator=(const ModelContainer& obj)
+			{
+			model = obj.model;
+
+			return *this;
+			};  
+	
 		virtual ~ModelContainer()
 			{
-  			if (model)
+			if (model)
 				{
 				delete model;
 				model = NULL;
@@ -127,7 +131,7 @@ class ModelContainer
 				{
 				delete child_list[i];
 				}
-
+ 
 			}; // end destructor
 
 	 	std::vector<ModelChild*> child_list;	// list of the children for this fuzzy model
@@ -140,7 +144,8 @@ class ModelContainer
 // (as opposed to a pointer to it) so the destructor is called when the program ends
 // and we don't have to require the user to call a "close_model" type function to free memory.
 
-std::vector<ModelContainer> model_list; // list of the fuzzy models being used
+// 4/03 changed to LIST to avoid destructor calls when inserting models.
+std::list<ModelContainer > model_list; // list of the fuzzy models being used
 
 //
 // Function:	ffll_new_child()
@@ -176,8 +181,7 @@ int WIN_FFLL_API ffll_new_child(int model_idx)
 
 	return container->child_list.size() - 1;
  
-}; // end ffll_new_child()
-
+}; // end ffll_get_child()
 
 //
 // Function:	ffll_set_value()
@@ -399,46 +403,11 @@ int WIN_FFLL_API ffll_new_model()
 	ModelContainer container;  
   
 	// add it to the list of open models
-	model_list.push_back(container); // new_model);
+	model_list.push_back(container); 
  
 	return model_list.size() - 1;
 
 }; // end ffll_new_model()
-
-
-//
-// Function:	ffll_close_model()
-// 
-// Purpose:		Closes the model for the index passed in.
-//
-// Arguments:	
-//
-//		int		model_idx	- index of the model 
-//
-// Returns:
-//
-//		0 - success
-//		non-zero - failure
-//
-// Author:	Michael Zarozinski
-// Date:	2/02
-// 
-// Modification History
-// Author	Date		Modification
-// ------	----		------------
-//
-//  
-int WIN_FFLL_API ffll_close_model(int model_idx)
-{
-	ModelContainer* container = get_model(model_idx);
-
-	assert(container->model != NULL); // make sure you call ffll_load_fcl_file() before this func.
-
-	delete container;
-
-	return 0;
- 
-}; // end ffll_close_model()
 
 //
 // Function:	get_model()
@@ -459,9 +428,9 @@ int WIN_FFLL_API ffll_close_model(int model_idx)
 // Date:	9/01
 // 
 // Modification History
-// Author	Date		Modification
-// ------	----		------------
-//
+// Author		Date		Modification
+// ------		----		------------
+// Michael Z	4/03		Changed to use list iterator
 //
 ModelContainer* get_model(int idx)
 {
@@ -471,16 +440,56 @@ ModelContainer* get_model(int idx)
 	// get a copy and writing a "deep copy" for that object
 	// would introduce far more places things can go wrong.
    
-	std::vector<ModelContainer>::iterator it;
+  	std::list<ModelContainer>::iterator it;
  
 	int tmp_idx = idx;
 
 	it = model_list.begin();
 
-	while(tmp_idx--)
-		it++;
+	ModelContainer* ret_val = &(*it);
 
-	return it;
+	while(tmp_idx--)
+		{
+		ret_val = &(*it);
+		it++;
+		}
+
+	return ret_val;  
 				
 } // end get_model()
  
+
+//
+// Function:	ffll_close_model()
+// 
+// Purpose:		Closes the model for the index passed in.
+//
+// Arguments:	
+//
+//		int		model_idx	- index of the model 
+//
+// Returns:
+//
+//		0 - success
+//		non-zero - failure
+//
+// Author:	Michael Zarozinski
+// Date:	2/02
+// 
+// Modification History
+//	Author		Date		Modification
+//	------		----		------------
+//	Michael Z	4/15/03		Ignore null model... 
+//  
+int WIN_FFLL_API ffll_close_model(int model_idx)
+{
+	ModelContainer* container = get_model(model_idx);
+
+	if (container->model != NULL)
+		return 0;
+
+ 	delete container;
+
+	return 0;
+ 
+}; // end ffll_close_model()

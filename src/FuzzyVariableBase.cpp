@@ -467,19 +467,18 @@ void FuzzyVariableBase::delete_all_sets()
 // Date:	8/99
 // 
 // Modification History
-// Author	Date		Modification
-// ------	----		------------
-//
+// Author		Date		Modification
+// ------		----		------------
+// Michael Z	4/03		changed to use convert_to_wide_char() for compatiblity
 //
 int FuzzyVariableBase::set_id(const char* _id, int set_idx /* = -1 */)
 {
-	wchar_t* wc = new wchar_t[strlen(_id) + 1];
-
-	// convert from char to wchar_t
-	swprintf(wc, L"%S", _id);
+ 	// convert from char to wchar_t
+	wchar_t* wc = convert_to_wide_char(_id);
 
 	int ret_val = set_id(wc, set_idx);  
 
+	// we MUST free mem convert_to_wide_char() created
 	delete[] wc;
 
 	return ret_val;
@@ -1280,9 +1279,9 @@ int FuzzyVariableBase::init(const wchar_t* _id, bool create_unique_id /* = true 
 
 	// if no name is passed in name it "Variable 0"
  	if (_id == NULL)
-		swprintf(tmp_name, L"%s 1", load_string(STR_VARIABLE));  
+		swprintf(tmp_name, name_len, L"%ls 1", load_string(STR_VARIABLE));    
  	else
-		swprintf(tmp_name, L"%s", _id );  
+		swprintf(tmp_name, name_len, L"%ls", _id );  
  	
  	// set the name.  NOTE: this set_id() performs a check to ensure that the variable name is UNIQUE
 	// for this model.  
@@ -1303,9 +1302,9 @@ int FuzzyVariableBase::init(const wchar_t* _id, bool create_unique_id /* = true 
 			{
 			// rename variable...
 			if (_id == NULL)
-				swprintf(tmp_name, L"%s %d", load_string(STR_VARIABLE), counter  );  
+				swprintf(tmp_name, name_len, L"%ls %d", load_string(STR_VARIABLE), counter  );  
  			else
-				swprintf(tmp_name, L"%s %d", _id, counter );  
+				swprintf(tmp_name, name_len, L"%ls %d", _id, counter );  
 
 			counter++;
  

@@ -138,9 +138,9 @@ int COGDefuzzSetObj::init(int array_max)
 // Date:	8/01
 // 
 // Modification History
-// Author	Date		Modification
-// ------	----		------------
-//
+// Author		Date		Modification
+// ------		----		------------
+// Michael Z	4/03		removed adding min_x to set_moment()	
 //
  
 
@@ -228,10 +228,9 @@ void COGDefuzzSetObj::calc()
 		// to convert an index to a 'x' value.  Note: we could have multiplied
 		// above when we calculated each moment but it's faster to just perform
 		// ONE multiplication here
-		// We also add the starting x value of the output variable to get
-		// it in the correct position relative to the "origin" of the output variable
-
-		set_moment(dom_idx, min_x + (moment_sum * idx_mult ));
+		// 4/03 - removing min_x in set_moment, this was causing slight output inconsistencies
+		
+		set_moment(dom_idx, (moment_sum * idx_mult ));
 
 		} // end loop through DOM
 
